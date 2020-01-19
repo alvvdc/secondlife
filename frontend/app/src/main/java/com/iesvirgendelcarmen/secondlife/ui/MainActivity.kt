@@ -2,6 +2,7 @@ package com.iesvirgendelcarmen.secondlife.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.iesvirgendelcarmen.secondlife.R
@@ -13,6 +14,8 @@ class MainActivity : AppCompatActivity() {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
     }
 
+    lateinit var drawerLayout : DrawerLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,5 +26,10 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.container, ListProductsFragment(productViewModel))
                 .commit()
         }
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+
+
+
     }
 }

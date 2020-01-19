@@ -5,4 +5,12 @@
     <color name="colorAccent">#D81B60</color>
     <color name="splashScreenBackground">#2e6070</color>
     <color name="background">#202c39</color>
+
+    <color name="color1">#2e6070</color>
+    <color name="color2">#202c39</color>
+    <color name="color3">#B8B08D</color>
+    <color name="color4">#F2D492</color>
+    <color name="color5">#f29559</color>
+    <color name="color6">#FFFFFF</color>
+
 </resources>
