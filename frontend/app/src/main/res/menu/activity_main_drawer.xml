@@ -5,6 +5,16 @@
     tools:showIn="navigation_view">
 
     <group
+        android:id="@+id/inicio1"
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:visible="true">
+        <item
+            android:id="@+id/inicio"
+            android:icon="@drawable/ic_action_armchair"
+            android:title="Inicio" />
+    </group>
+    <group
         android:id="@+id/categorias1"
         android:checkableBehavior="single"
         android:enabled="true"
