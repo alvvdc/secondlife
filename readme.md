@@ -1,6 +1,5 @@
 # Proyecto SecondLife 2020
-
-![Logo](..docs/Logotipo/Logo.png )
+![Logo](docs/Logotipo/Logo-min.png)
 
 ## Enlaces útiles del repositorio:
 - [Requisitos](../proyectoMVVMbackend/docs/requisitos.md)
@@ -8,12 +7,11 @@
   
 ## Esquema de la base de datos:
 
-![Esquema](..docs/Esquema&#32;DB/baseDatosEsquema.png)
-
+![Esquema](docs/Esquema&#32;DB/baseDatosEsquema.png)
 
 ## Paleta de colores:
 
-
 ## Participantes:
+
 - Alberto Torres Cruz
 - Álvaro García Muñoz 
