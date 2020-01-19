@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/inicio1"
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:visible="true">
+        <item
+            android:id="@+id/inicio"
+            android:icon="@drawable/ic_action_armchair"
+            android:title="Inicio" />
+    </group>
+    <group
+        android:id="@+id/categorias1"
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:visible="true">
+        <item
+            android:id="@+id/categorias"
+            android:title="Categorias" />
+        <item
+            android:id="@+id/motor"
+            android:icon="@drawable/ic_motorcycle"
+            android:title="Motor" />
+        <item
+            android:id="@+id/inmobiliaria"
+            android:icon="@drawable/ic_action_armchair"
+            android:title="Inmobiliaria" />
+        <item
+            android:id="@+id/empleo"
+            android:icon="@drawable/ic_work"
+            android:title="Empleo" />
+        <item
+            android:id="@+id/servicios"
+            android:icon="@drawable/ic_local_offer"
+            android:title="Servicios" />
+    </group>
+    <group
+        android:id="@+id/anuncio1"
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:visible="true">
+        <item
+            android:id="@+id/anuncios"
+            android:title="Anuncios" />
+        <item
+            android:id="@+id/editar"
+            android:icon="@drawable/ic_action_edit"
+            android:title="Editar" />
+    </group>
+
+</menu>
