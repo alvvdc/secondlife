@@ -11,15 +11,15 @@ class ProductViewModel : ViewModel() {
     }
 
     private fun mock() {
-        productsList.add(Product("Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
+        productsList.add(Product(1, 1,"Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
+        productsList.add(Product(1, 1, "Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
+        productsList.add(Product(1, 1, "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
+        productsList.add(Product(1, 1, "Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
+        productsList.add(Product(1, 1, "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
+        productsList.add(Product(1, 1, "Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
+        productsList.add(Product(1, 1, "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
+        productsList.add(Product(1, 1, "Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
+        productsList.add(Product(1, 1, "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
+        productsList.add(Product(1, 1, "Mueble rústico", "", 130f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
     }
 }
