@@ -2,7 +2,9 @@ package com.iesvirgendelcarmen.secondlife.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.SearchView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,8 +15,6 @@ import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
-
-
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -31,14 +31,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        toolBar()
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.container, ListProductsFragment(productViewModel))
+                .add(R.id.container, ListProductsFragment(productViewModel, toolbar))
                 .commit()
         }
-
-        toolBar()
     }
 
     private fun toolBar() {
