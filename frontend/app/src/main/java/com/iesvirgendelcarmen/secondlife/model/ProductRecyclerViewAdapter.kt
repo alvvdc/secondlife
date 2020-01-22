@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
 
-class ProductRecyclerViewAdapter(private val productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>() {
+class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>() {
 
     override fun getItemCount() = productsList.size
 
