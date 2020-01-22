@@ -10,7 +10,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
-import com.iesvirgendelcarmen.secondlife.model.ProductResponse
 
 object ProductRepositoryVolley :ProductRepositoryDataSource {
 
