@@ -1,9 +1,10 @@
-package com.iesvirgendelcarmen.secondlife
+package com.iesvirgendelcarmen.secondlife.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
+import com.iesvirgendelcarmen.secondlife.R
 
 class SplashActivity : AppCompatActivity() {
 
