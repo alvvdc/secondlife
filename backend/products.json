@@ -1,0 +1,6 @@
+{
+    "product": [
+        {"title" : "Muchas camisetas", "description" : "Están nuevas a estrenar, no hago envios.", "price" : 20, "images" : ["https://i.imgur.com/0oPAfru.png"]},
+        {"title" : "Mueble rústico", "description" : "", "price" : 130, "images" : ["https://i.imgur.com/rWkb5AJ.png"]}
+    ]
+}
