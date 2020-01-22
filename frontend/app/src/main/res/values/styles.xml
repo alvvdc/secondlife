@@ -13,6 +13,32 @@
         <item name="android:textColorHint">@android:color/black</item>
     </style>
 
+    <style name="AppTheme.ButtonCustom" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/color6</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="AppTheme.ButtonCustomWarn" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape3</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/color6</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="AppTheme.EditTextCustom" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/rounded_shape2</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
