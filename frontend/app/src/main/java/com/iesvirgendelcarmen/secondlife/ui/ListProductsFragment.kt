@@ -23,6 +23,8 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
 
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
 
+    constructor() : this(null!!, null!!)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
