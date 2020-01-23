@@ -40,5 +40,29 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
         })
     }
 
+    override fun editProduct(product: Product, callback: ProductRepositoryCallback.EditProduct) {
+        callback.onLoading()
+
+        val call = api.editProduct(
+            product.id,
+            product.idUser,
+            product.title,
+            product.description,
+            product.price,
+            product.images
+        )
+
+        call.enqueue(object : Callback<Product>{
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                callback.onResponse(product)
+            }
+
+        })
+    }
+
 
 }

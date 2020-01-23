@@ -8,4 +8,10 @@ interface ProductRepositoryCallback {
         fun onError(message :String)
         fun onLoading()
     }
+
+    interface EditProduct {
+        fun onResponse(product: Product)
+        fun onError(message :String)
+        fun onLoading()
+    }
 }

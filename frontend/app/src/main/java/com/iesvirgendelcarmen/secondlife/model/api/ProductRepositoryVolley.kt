@@ -13,7 +13,6 @@ import com.iesvirgendelcarmen.secondlife.model.Product
 
 object ProductRepositoryVolley :ProductRepositoryDataSource {
 
-
     override fun getAllProducts(callback: ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
@@ -38,5 +37,28 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         )
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
+
+    override fun editProduct(product: Product, callback: ProductRepositoryCallback.EditProduct) {
+        callback.onLoading()
+
+        VolleySingleton.getInstance().requestQueue
+
+        val EDIT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product.id}"
+
+        val stringRequest = StringRequest (
+            Request.Method.PUT,
+            EDIT_PRODUCT_URL,
+            Listener { response ->
+                val listType = object : TypeToken<Product>() {}.type
+                val product = Gson().fromJson<Product>(response, listType)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
+    }
+
 
 }
