@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
 
-class ProductRecyclerViewAdapter(private var productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
+class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
 
     lateinit var lista : List<Product>
 
