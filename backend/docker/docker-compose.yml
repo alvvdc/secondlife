@@ -1,0 +1,29 @@
+version: '3.5'
+
+services:
+    mongo:
+        image: mongo:latest
+        container_name: mongoProyecto
+        ports:
+        - "8081:8081"
+        networks:
+            dev:
+                ipv4_address: 177.8.0.10
+
+    mongo_seed:
+        container_name: mongo_seed
+        build: .
+        networks:
+            - dev
+        depends_on:
+            - mongo
+                
+networks:
+    dev:
+        ipam:
+            driver: default
+            config:
+                - subnet: 177.8.0.0/24
+
+
+                
