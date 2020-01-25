@@ -1,0 +1,83 @@
+[
+
+	{
+		"_id": 1,
+		"category": "Motor",
+		"products":
+		[
+			{
+				"_id": 1,
+				"publisher": 11,
+				"title": "Ferrari rojo",
+				"description": "Impecable, nunca circuito.",
+				"price": 120000.0,
+				"images": []
+			},
+			{
+				"_id": 2,
+				"publisher": 12,
+				"title": "Lamborghini naranja bitcoin",
+				"description": "Pura libertad",
+				"price": 440000.0,
+				"images": []
+			}
+		]
+	},
+
+	{
+		"_id": 2,
+		"category": "Inmobiliaria",
+		"products":
+		[
+			{
+				"_id": 3,
+				"publisher": 13,
+				"title": "Chalet en Ibiza",
+				"description": "400m², cerca de la costa.",
+				"price": 51000.0,
+				"images": []
+			},
+			{
+				"_id": 4,
+				"publisher": 14,
+				"title": "Mansión en Panamá",
+				"description": "Pura libertad",
+				"price": 350000.0,
+				"images": []
+			}
+		]
+	},
+
+	{
+		"_id": 3,
+		"category": "Empleo",
+		"products":
+		[
+			{
+				"_id": 5,
+				"publisher": 15,
+				"title": "Programador fullstack",
+				"description": "Se buscar programador fullstack con 4 años de experiencia y C2 en inglés y francés",
+				"price": 12000.0,
+				"images": []
+			}
+		]
+	},
+
+	{
+		"_id": 4,
+		"category": "Servicios",
+		"products":
+		[
+			{
+				"_id": 6,
+				"publisher": 16,
+				"title": "Servicio de limpieza",
+				"description": "Limpio limpio",
+				"price": 100.0,
+				"images": []
+			}
+		]
+	}
+
+]
