@@ -24,25 +24,25 @@ module.exports = {
         })
     },
 
-    validate: (req, res, next) => {
-        user.findOne({email: req.body}, (err, userGiven) => {
-            if (err)
+    validate: (req, res, next) => {       
+
+        user.findOne({email: req.body.email}, (err, userGiven) => {
+            if (err) {
                 res.status(500).json({error: 'Incorrect mail'})
-            if (userGiven)
+            }          
+            
+            if (userGiven) {
                 if (bcrypt.compareSync(req.body.password, userGiven.password)){
-                    const roken = jwt.sign({id: userGiven.id})
-                    req.app.get('secretKey')
+                    const token = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '1h' });                   
                     res.json({
-                        status: 'Sucess'
+                        status: 'Sucess',
+                        token: token
                     })
                 } else 
-                    res.status(404).json({
-                        error: 'Incorrect password'
-                    })
+                    res.status(404).json({error: 'Incorrect password'})
+            } 
             else 
-                res.status(404).json({
-                    error: 'Incorrect mail'
-                })
+                res.status(404).json({error: 'Incorrect mail'})
         })
     }
 
