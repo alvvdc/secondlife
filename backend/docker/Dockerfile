@@ -1,4 +1,0 @@
-FROM mongo:latest
-COPY secondLifeUsers.json /secondLifeUsers.json
-CMD mongoimport --host mongo --db secondLife --collection users --drop --file /secondLifeUsers.json --jsonArray
-

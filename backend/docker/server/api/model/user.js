@@ -8,12 +8,13 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         trim: true,
-        default: 0
+        default: -1
     }, 
     nickname: {
         type: String,
         required: true,
         trim: true,
+        default: 'Nickless'
     }, 
     name: {
         type: String,
@@ -25,6 +26,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        default: 'lastnameless'
     },
     lastName2: {
         type: String,
@@ -34,7 +36,8 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/, 'Incorrect mail']
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/, 'Incorrect mail'],
+        default: 'email@secondlife.com'
     },
     password: {
         type: String,
@@ -47,8 +50,8 @@ const userSchema = new Schema({
     },
     type: {
         type: Number,
-        required: true,
-        trim: true
+        trim: true,
+        default: 0
     }
 
 }, {versionKey: false})

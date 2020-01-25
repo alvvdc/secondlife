@@ -3,7 +3,7 @@ version: '3.5'
 services:
     mongo:
         image: mongo:latest
-        container_name: mongoProyecto
+        container_name: mongoSecondLife
         ports:
         - "8081:8081"
         networks:
@@ -12,9 +12,24 @@ services:
 
     mongo_seed:
         container_name: mongo_seed
-        build: .
+        build: 
+            context: .
+            dockerfile: mongoDockerFile
         networks:
             - dev
+        depends_on:
+            - mongo
+
+    node:
+        container_name: nodeSecondLife
+        build: 
+            context: .
+            dockerfile: nodeDockerFile
+        expose:
+            - "7707"
+        networks:
+            dev:
+                ipv4_address: 177.8.0.11
         depends_on:
             - mongo
                 

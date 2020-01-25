@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node server.js --max-old-space-size=1024",
     "dev": "nodemon server.js"
   },
   "author": "Alberto Torres Cruz y Álvaro García Muñoz",
