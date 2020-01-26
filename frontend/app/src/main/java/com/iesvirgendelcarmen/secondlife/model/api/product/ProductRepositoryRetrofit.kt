@@ -1,17 +1,19 @@
-package com.iesvirgendelcarmen.secondlife.model.api
+package com.iesvirgendelcarmen.secondlife.model.api.product
 
-import android.util.Log
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ProductRepositoryRetrofit :ProductRepositoryDataSource {
+object ProductRepositoryRetrofit :
+    UserRepositoryDataSource {
 
-    private lateinit var api :ProductApi
+    private lateinit var api : ProductApi
 
     init {
         val retrofit = Retrofit
@@ -20,10 +22,11 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        api = retrofit.create(ProductApi::class.java)
+        api = retrofit.create(
+            ProductApi::class.java)
     }
 
-    override fun getAllProducts(callback :ProductRepositoryCallback.ListProducts) {
+    override fun getAllProducts(callback : UserRepositoryCallback.ListProducts) {
         callback.onLoading()
 
         val call = api.getAllProducts()

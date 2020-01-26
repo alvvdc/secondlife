@@ -3,12 +3,16 @@ package com.iesvirgendelcarmen.secondlife.model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.*
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryDataSource
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryVolley
 
 class ProductViewModel : ViewModel() {
 
     val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
-    private val productRepository :ProductRepositoryDataSource = ProductRepositoryVolley
+    private val productRepository : UserRepositoryDataSource =
+        UserRepositoryVolley
 
     init {
         mock()
@@ -28,7 +32,7 @@ class ProductViewModel : ViewModel() {
     }
 
     fun getAllProducts() {
-        productRepository.getAllProducts(object : ProductRepositoryCallback.ListProducts {
+        productRepository.getAllProducts(object : UserRepositoryCallback.ListProducts {
             override fun onResponse(products: List<Product>) {
                 productListLiveData.value = Resource.success(products)
             }

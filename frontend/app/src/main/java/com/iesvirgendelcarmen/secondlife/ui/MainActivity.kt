@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.container, ListProductsFragment(productViewModel, toolbar))
+                .add(android.R.id.content, LoginFragment())
                 .commit()
         }
     }

@@ -131,7 +131,7 @@
                     app:srcCompat="@drawable/logo" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/close"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="8dp"
