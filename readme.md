@@ -15,26 +15,21 @@
 
 ## Docker:
 
-#### Crear:
-```bash
-sudo docker-compose up -d
-```
-
 #### Iniciar / Parar:
 ```bash
-sudo docker-compose start
-sudo docker-compose stop
+docker-compose start
+docker-compose stop
 ```
 
 #### Borrar:
 ```bash
-sudo docker-compose down
+docker-compose down
 ```
 
 #### Limpiar cache:
 Si realizamos ajustes en la configuración de docker-compose y no se aplican deberemos limpiar el cache con el siguiente comando.
 ```bash
-sudo docker system prune -a
+docker system prune -a
 ```
 
 ## Paleta de colores:

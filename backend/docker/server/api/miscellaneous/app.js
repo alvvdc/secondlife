@@ -5,6 +5,6 @@ const app = express()
 
 app.set('secretKey', 'vivaManolo')
 app.use(bodyParser.json())
-app.use('/user', userRoutes)
+app.use('/api', userRoutes)
 
 module.exports = app
