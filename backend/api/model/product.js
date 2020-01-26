@@ -29,6 +29,10 @@ const productSchema = new Schema({
     },
     images : {
         type: [String]
+    },
+    isSold : {
+        type: Boolean,
+        default: false
     }
 }, {versionKey : false})
 

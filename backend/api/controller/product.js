@@ -10,7 +10,8 @@ module.exports = {
             title : req.body.title,
             description : req.body.description,
             price : req.body.price,
-            images : req.body.images
+            images : req.body.images,
+            isSold : req.body.isSold
         }
 
         product.create(newProduct, (err, result) => {
@@ -31,9 +32,9 @@ module.exports = {
         })
     },
 
-    getAllProducts : (req, res) => {
+    getUnsoldProducts : (req, res) => {
 
-        product.find({}, (err, result) => {
+        product.find({isSold : false}, (err, result) => {
             if (err)
                 res.status(500).json({error : err})
             else 
@@ -41,10 +42,10 @@ module.exports = {
         })
     },
 
-    getProductsByCategory : (req, res) => {
+    getUnsoldProductsByCategory : (req, res) => {
         const category = req.params.category
 
-        product.find({category : category}, (err, result) => {
+        product.find({category : category, isSold : false}, (err, result) => {
             if (err)
                 res.status(500).json({error : err})
             else
