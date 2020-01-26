@@ -40,10 +40,10 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
         })
     }
 
-    override fun getUnsoldProductsByCategory(category: Category, callback: ProductRepositoryCallback.ListProducts) {
+    override fun getUnsoldProductsByCategory(category: String, callback: ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
-        val call = api.getUnsoldProductsByCategory(category.toString().toLowerCase())
+        val call = api.getUnsoldProductsByCategory(category)
         call.enqueue(object : Callback<List<Product>> {
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
                 callback.onError(t.message.toString())

@@ -42,4 +42,21 @@ class ProductViewModel : ViewModel() {
             }
         })
     }
+
+    fun getUnsoldProductsByCategory(category: Category) {
+        productRepository.getUnsoldProductsByCategory(category.toString().toLowerCase(), object : ProductRepositoryCallback.ListProducts {
+            override fun onResponse(products: List<Product>) {
+                productListLiveData.value = Resource.success(products)
+            }
+
+            override fun onError(message: String) {
+                productListLiveData.value = Resource.error(message, emptyList())
+            }
+
+            override fun onLoading() {
+                productListLiveData.value = Resource.loading(emptyList())
+            }
+
+        })
+    }
 }

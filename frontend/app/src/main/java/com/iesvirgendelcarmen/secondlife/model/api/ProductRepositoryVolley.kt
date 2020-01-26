@@ -40,13 +40,13 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
-    override fun getUnsoldProductsByCategory(category: Category, callback: ProductRepositoryCallback.ListProducts) {
+    override fun getUnsoldProductsByCategory(category: String, callback: ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
         VolleySingleton.getInstance().requestQueue
 
 
-        val GET_PRODUCTS_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${category.toString().toLowerCase()}"
+        val GET_PRODUCTS_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/$category"
 
         val stringRequest = StringRequest (
             Request.Method.GET,

@@ -4,5 +4,5 @@ import com.iesvirgendelcarmen.secondlife.model.Category
 
 interface ProductRepositoryDataSource {
     fun getUnsoldProducts(callback :ProductRepositoryCallback.ListProducts)
-    fun getUnsoldProductsByCategory(category: Category, callback: ProductRepositoryCallback.ListProducts)
+    fun getUnsoldProductsByCategory(category: String, callback: ProductRepositoryCallback.ListProducts)
 }
