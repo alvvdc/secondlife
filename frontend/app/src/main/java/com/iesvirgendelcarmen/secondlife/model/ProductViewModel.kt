@@ -6,7 +6,7 @@ import com.iesvirgendelcarmen.secondlife.model.api.*
 
 class ProductViewModel : ViewModel() {
 
-    val productsList = mutableListOf<Product>()
+    //val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
     private val productRepository :ProductRepositoryDataSource = ProductRepositoryVolley
 
@@ -14,7 +14,7 @@ class ProductViewModel : ViewModel() {
         //mock()
     }
 
-    private fun mock() {
+    /*private fun mock() {
         productsList.add(Product("1", "1","Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
         productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
         productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
@@ -25,10 +25,10 @@ class ProductViewModel : ViewModel() {
         productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
         productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
         productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-    }
+    }*/
 
-    fun getAllProducts() {
-        productRepository.getAllProducts(object : ProductRepositoryCallback.ListProducts {
+    fun getUnsoldProducts() {
+        productRepository.getUnsoldProducts(object : ProductRepositoryCallback.ListProducts {
             override fun onResponse(products: List<Product>) {
                 productListLiveData.value = Resource.success(products)
             }

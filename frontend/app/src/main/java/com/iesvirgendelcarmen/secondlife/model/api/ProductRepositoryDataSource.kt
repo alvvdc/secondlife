@@ -1,5 +1,8 @@
 package com.iesvirgendelcarmen.secondlife.model.api
 
+import com.iesvirgendelcarmen.secondlife.model.Category
+
 interface ProductRepositoryDataSource {
-    fun getAllProducts(callback :ProductRepositoryCallback.ListProducts)
+    fun getUnsoldProducts(callback :ProductRepositoryCallback.ListProducts)
+    fun getUnsoldProductsByCategory(category: Category, callback: ProductRepositoryCallback.ListProducts)
 }
