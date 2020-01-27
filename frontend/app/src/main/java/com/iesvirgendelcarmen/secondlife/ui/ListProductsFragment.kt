@@ -1,13 +1,9 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -15,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.iesvirgendelcarmen.secondlife.R
+import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
@@ -32,7 +29,7 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val recyclerViewProducts = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
-        productRecyclerViewAdapter = ProductRecyclerViewAdapter(productViewModel.productsList)
+        productRecyclerViewAdapter = ProductRecyclerViewAdapter(emptyList())
 
         recyclerViewProducts.apply {
             adapter = productRecyclerViewAdapter
@@ -75,6 +72,10 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
             }
         })
 
-        productViewModel.getAllProducts()
+        productViewModel.getUnsoldProducts()
+    }
+
+    fun listProductsByCategory(category: Category) {
+        productViewModel.getUnsoldProductsByCategory(category)
     }
 }

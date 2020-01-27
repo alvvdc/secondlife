@@ -44,10 +44,12 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
             Double
             productPrice.text = "${product.price.toInt()}€"
 
-            Glide
-                .with(itemView)
-                .load(product.images[0])
-                .into(productImage)
+            if (product.images.size > 0) {
+                Glide
+                    .with(itemView)
+                    .load(product.images[0])
+                    .into(productImage)
+            }
         }
     }
 

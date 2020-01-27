@@ -1,7 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.model.api
 
-import android.util.Log
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
+import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.Product
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,10 +23,27 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
         api = retrofit.create(ProductApi::class.java)
     }
 
-    override fun getAllProducts(callback :ProductRepositoryCallback.ListProducts) {
+    override fun getUnsoldProducts(callback :ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
-        val call = api.getAllProducts()
+        val call = api.getUnsoldProducts()
+        call.enqueue(object : Callback<List<Product>> {
+            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
+                val responseProducts = response.body().orEmpty()
+                callback.onResponse(responseProducts)
+            }
+
+        })
+    }
+
+    override fun getUnsoldProductsByCategory(category: String, callback: ProductRepositoryCallback.ListProducts) {
+        callback.onLoading()
+
+        val call = api.getUnsoldProductsByCategory(category)
         call.enqueue(object : Callback<List<Product>> {
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
                 callback.onError(t.message.toString())
@@ -45,7 +62,7 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
 
         val call = api.editProduct(
             product.id,
-            product.idUser,
+            product.publisher,
             product.title,
             product.description,
             product.price,
@@ -63,6 +80,4 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
 
         })
     }
-
-
 }

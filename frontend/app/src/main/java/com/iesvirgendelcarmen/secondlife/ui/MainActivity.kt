@@ -3,6 +3,7 @@ package com.iesvirgendelcarmen.secondlife.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -19,6 +20,7 @@ import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryCallback
 import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryRetrofit
 import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryVolley
+import com.iesvirgendelcarmen.secondlife.model.Category
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -26,6 +28,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
     }
+
+    lateinit var listProductsFragment: ListProductsFragment
 
     lateinit var drawerLayout : DrawerLayout
     lateinit var toolbar: Toolbar
@@ -37,10 +41,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolBar()
 
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar)
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.container, ListProductsFragment(productViewModel, toolbar))
+                .add(R.id.container, listProductsFragment)
                 .commit()
         }
     }
@@ -56,9 +62,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
-    override fun onNavigationItemSelected(p0: MenuItem): Boolean {
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 
+        if (listProductsFragment == null)
+            return false
 
+        when (menuItem.itemId) {
+            R.id.motor -> {
+                listProductsFragment.listProductsByCategory(Category.MOTOR)
+            }
+            R.id.inmobiliaria -> {
+                listProductsFragment.listProductsByCategory(Category.INMOBILIARIA)
+            }
+            R.id.empleo -> {
+                listProductsFragment.listProductsByCategory(Category.EMPLEO)
+            }
+            R.id.servicios -> {
+                listProductsFragment.listProductsByCategory(Category.SERVICIOS)
+            }
+        }
+        drawerLayout.closeDrawers()
         return true
     }
 }
