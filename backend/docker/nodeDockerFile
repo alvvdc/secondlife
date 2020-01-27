@@ -1,0 +1,4 @@
+FROM node:10.16.3
+COPY ./server/ /
+CMD npm install
+CMD npm start

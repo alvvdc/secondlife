@@ -3,15 +3,34 @@
 
 ---
 
-[REQUISITOS](../proyectoMVVMbackend/docs/requisitos.md) -
-[RESUMEN](../proyectoMVVMbackend/docs/resumen.md) - 
-[ENDPOINTS](../proyectoMVVMbackend/docs/endpoints.md) 
+[REQUISITOS](/proyectoMVVMbackend/docs/requisitos.md) -
+[RESUMEN](/proyectoMVVMbackend/docs/resumen.md) - 
+[ENDPOINTS](/proyectoMVVMbackend/docs/endpoints.md) 
 
 ---
   
 ## Esquema de la base de datos:
 
 ![Esquema](docs/Esquema&#32;DB/baseDatosEsquema.png)
+
+## Docker:
+
+#### Iniciar / Parar:
+```bash
+docker-compose start
+docker-compose stop
+```
+
+#### Borrar:
+```bash
+docker-compose down
+```
+
+#### Limpiar cache:
+Si realizamos ajustes en la configuración de docker-compose y no se aplican deberemos limpiar el cache con el siguiente comando.
+```bash
+docker system prune -a
+```
 
 ## Paleta de colores:
 
