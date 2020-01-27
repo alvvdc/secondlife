@@ -43,22 +43,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .add(R.id.container, ListProductsFragment(productViewModel, toolbar))
                 .commit()
         }
-
-        val lista = mutableListOf("https://i.imgur.com/0oPAfru.png", "https://i.imgur.com/0oPAfru.png")
-        ProductRepositoryVolley.editProduct(Product(1, 1, "Pocas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, lista),
-            object: ProductRepositoryCallback.EditProduct{
-                override fun onResponse(product: Product) {
-                    Log.i("pepe", product.title)
-                }
-
-                override fun onError(message: String) {
-                    Log.i("pepe", "message")
-                }
-
-                override fun onLoading() {
-                    Log.i("pepe", "Cargando")
-                }
-            } )
     }
 
     private fun toolBar() {
