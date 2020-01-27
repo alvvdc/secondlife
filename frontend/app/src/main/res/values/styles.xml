@@ -13,6 +13,10 @@
         <item name="android:textColorHint">@android:color/black</item>
     </style>
 
+    <style name="AppTheme.NavigationView">
+        <item name="android:textColorSecondary">@color/color5</item>
+    </style>
+
     <style name="AppTheme.ButtonCustom" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/rounded_shape</item>
         <item name="android:textSize">15dp</item>
