@@ -17,9 +17,6 @@ import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
 import com.iesvirgendelcarmen.secondlife.model.Product
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryCallback
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryRetrofit
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryVolley
 import com.iesvirgendelcarmen.secondlife.model.Category
 
 

@@ -1,4 +1,4 @@
-package com.iesvirgendelcarmen.secondlife.model.api
+package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
