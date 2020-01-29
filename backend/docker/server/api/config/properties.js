@@ -1,4 +1,4 @@
 module.exports = {
-    dbUrl: 'mongodb://177.8.0.10/secondLife',
+    dbUrl: 'mongodb://10.107.0.20/secondLife',
     port: process.env.PORT || 7707
 }
