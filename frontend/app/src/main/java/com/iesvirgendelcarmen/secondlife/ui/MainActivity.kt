@@ -16,10 +16,8 @@ import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
+import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryCallback
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryRetrofit
-import com.iesvirgendelcarmen.secondlife.model.api.ProductRepositoryVolley
 import com.iesvirgendelcarmen.secondlife.model.Category
 
 
@@ -49,6 +47,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .add(R.id.container, listProductsFragment)
                 .commit()
         }
+
+        var sharedPreferences = getSharedPreferences(APIConfig.CONFIG_FILE,0)
+
+        if (sharedPreferences.getString("token", "null") == "null"){
+            supportFragmentManager
+                .beginTransaction()
+                .add(android.R.id.content, LoginFragment())
+                .commit()
+        }
+
     }
 
     private fun toolBar() {

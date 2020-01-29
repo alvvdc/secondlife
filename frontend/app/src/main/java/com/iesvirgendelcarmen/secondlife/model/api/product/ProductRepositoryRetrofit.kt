@@ -1,7 +1,6 @@
-package com.iesvirgendelcarmen.secondlife.model.api
+package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.Product
 import retrofit2.Call
 import retrofit2.Callback
@@ -9,9 +8,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ProductRepositoryRetrofit :ProductRepositoryDataSource {
+object ProductRepositoryRetrofit : ProductRepositoryDataSource {
 
-    private lateinit var api :ProductApi
+    private lateinit var api : ProductApi
 
     init {
         val retrofit = Retrofit
@@ -20,7 +19,8 @@ object ProductRepositoryRetrofit :ProductRepositoryDataSource {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        api = retrofit.create(ProductApi::class.java)
+        api = retrofit.create(
+            ProductApi::class.java)
     }
 
     override fun getUnsoldProducts(callback :ProductRepositoryCallback.ListProducts) {
