@@ -3,15 +3,19 @@
 
 ---
 
-[REQUISITOS](/proyectoMVVMbackend/docs/requisitos.md) -
-[RESUMEN](/proyectoMVVMbackend/docs/resumen.md) - 
-[ENDPOINTS](/proyectoMVVMbackend/docs/endpoints.md) 
+[Requisitos](docs/requisitos.md) -
+[Resumen](docs/resumen.md) - 
+[Endpoints](docs/endpoints.md) 
 
 ---
   
 ## Esquema de la base de datos:
 
 ![Esquema](docs/Esquema&#32;DB/baseDatosEsquema.png)
+
+## Diagrama de clases :
+
+![Diagrama](docs/DiagramaClases/DiagramaClases.png)
 
 ## Docker:
 
