@@ -2,13 +2,13 @@ version: '3.5'
 
 services:
     mongo:
-        image: mongo:latest
+        image: mongo
         container_name: mongoSecondLife
         ports:
         - "8081:8081"
         networks:
             dev:
-                ipv4_address: 177.8.0.10
+                ipv4_address: 10.107.0.20
 
     mongo_seed:
         container_name: mongo_seed
@@ -25,11 +25,12 @@ services:
         build: 
             context: .
             dockerfile: nodeDockerFile
-        expose:
-            - "7707"
+        command: npm run dev
+        ports:
+            - "7707:7707"
         networks:
             dev:
-                ipv4_address: 177.8.0.11
+                ipv4_address: 10.107.0.21
         depends_on:
             - mongo
                 
@@ -38,7 +39,7 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: 177.8.0.0/24
+                - subnet: 10.107.0.1/24
 
 
                 

@@ -1,4 +1,4 @@
-FROM mongo:latest
+FROM mongo
 COPY secondLifeUsers.json /secondLifeUsers.json
-CMD mongoimport --host mongo --db secondLife --collection users --drop --file /secondLifeUsers.json --jsonArray
-CMD mongoimport --host mongo --db secondLife --collection products --drop --file /secondLifeProducts.json --jsonArray
+COPY secondLifeProducts.json /secondLifeProducts.json
+CMD mongoimport --host mongo --db secondLife --collection users --file /secondLifeUsers.json --jsonArray && mongoimport --host mongo --db secondLife --collection products --file /secondLifeProducts.json --jsonArray
