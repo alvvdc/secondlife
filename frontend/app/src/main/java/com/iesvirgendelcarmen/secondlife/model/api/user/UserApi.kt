@@ -1,23 +1,26 @@
 package com.iesvirgendelcarmen.secondlife.model.api.user
 
+import com.google.gson.JsonObject
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
+import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
 import retrofit2.Call
 import retrofit2.http.*
 
 interface UserApi {
 
-    @GET(APIConfig.PRODUCT_ROUTE)
+    @GET(APIConfig.USER_ROUTE)
     fun getAllUsers() :Call<List<User>>
 
-    @GET(APIConfig.PRODUCT_ROUTE + "/{id}")
+    @GET("${APIConfig.USER_ROUTE}/{id}")
     fun getUser(@Path("id") id: Int): Call<User>
 
     @FormUrlEncoded
-    @PUT(APIConfig.PRODUCT_ROUTE + "/{id}")
+    @PUT("${APIConfig.USER_ROUTE}/{id}")
     fun editUser(@Path("id") id: Int,
                  @Field("nickname") nickname: String,
+                 @Field("name") name: String,
                  @Field("lastName1") lastName1: String,
                  @Field("lastName2") lastName2: String,
                  @Field("email") email: String,
@@ -25,13 +28,13 @@ interface UserApi {
                  @Field("type") type: Int
                 ): Call<User>
 
-    @POST(APIConfig.PRODUCT_ROUTE + "/register")
+    @POST("register")
     fun register(@Body user: User): Call<User>
 
-    @POST(APIConfig.PRODUCT_ROUTE + "/login")
-    fun login(@Body user: User): Call<User>
+    @POST("login")
+    fun login(@Body user: User): Call<Token>
 
-    @DELETE(APIConfig.PRODUCT_ROUTE + "/{id}")
+    @DELETE("${APIConfig.USER_ROUTE}/{id}")
     fun deleteUser(@Path("id")id: Int): Call<Void>
 
 }

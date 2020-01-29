@@ -32,10 +32,9 @@ module.exports = {
             
             if (userGiven) {
                 if (bcrypt.compareSync(req.body.password, userGiven.password)){
-                    const token = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '1h' });  
+                    const token = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
                                      
                     res.json({
-                        status: 'Sucess',
                         token: token
                     })
                 } else 

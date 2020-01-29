@@ -14,30 +14,29 @@ import retrofit2.Call
 
 object UserRepositoryVolley: UserRepositoryDataSource {
 
-    override fun getAllUsers(callback: UserRepositoryCallback.User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getAllUsers(callback: UserRepositoryCallback.UsersCallback) {
+
     }
 
-    override fun getUser(id: Int): Call<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getUser(id: Int, callback: UserRepositoryCallback.UserCallback) {
+
     }
 
-    override fun editUser(user: User): Call<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun editUser(user: User, callback: UserRepositoryCallback.UserCallback) {
+
     }
 
-    override fun register(user: User): Call<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun register(user: User, callback: UserRepositoryCallback.UserCallback) {
+
     }
 
-    override fun login(user: User): Call<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun login(user: User, callback: UserRepositoryCallback.TokenCallback) {
+
     }
 
-    override fun deleteUser(id: Int): Call<Void> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun deleteUser(user: User, callback: UserRepositoryCallback.UserCallback) {
 
+    }
 
 
 }
