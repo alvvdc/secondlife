@@ -12,7 +12,7 @@ class ProductViewModel : ViewModel() {
 
     //val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
-    private val productRepository : ProductRepositoryDataSource = ProductRepositoryVolley
+    private val productRepository : ProductRepositoryDataSource = ProductRepositoryRetrofit
 
     init {
         //mock()
