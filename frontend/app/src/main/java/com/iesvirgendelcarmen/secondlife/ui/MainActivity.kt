@@ -88,6 +88,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.servicios -> {
                 listProductsFragment.listProductsByCategory(Category.SERVICIOS)
             }
+            R.id.inicio -> {
+                listProductsFragment.listAllProducts()
+            }
         }
         drawerLayout.closeDrawers()
         return true

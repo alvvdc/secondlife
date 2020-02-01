@@ -78,4 +78,8 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
     fun listProductsByCategory(category: Category) {
         productViewModel.getUnsoldProductsByCategory(category)
     }
+
+    fun listAllProducts() {
+        productViewModel.getUnsoldProducts()
+    }
 }
