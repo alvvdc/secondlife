@@ -10,14 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View) :Fragment() {
+class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View, val fapCallback :MainActivity.FragmentManager.FAP) :Fragment() {
 
+    lateinit var addProductFAP :FloatingActionButton
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
 
     override fun onCreateView(
@@ -36,9 +38,21 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
 
-        var busqueda : SearchView = toolbar.findViewById(R.id.busqueda)
+        onSearchListener()
+        onClickedFAP(view)
+    }
 
-        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+    private fun onClickedFAP(view: View) {
+        addProductFAP = view.findViewById(R.id.addProductFAP)
+        addProductFAP.setOnClickListener {
+            fapCallback.onClick()
+        }
+    }
+
+    private fun onSearchListener() {
+        var busqueda: SearchView = toolbar.findViewById(R.id.busqueda)
+
+        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -49,8 +63,6 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
             }
 
         })
-
-
     }
 
     override fun onStart() {

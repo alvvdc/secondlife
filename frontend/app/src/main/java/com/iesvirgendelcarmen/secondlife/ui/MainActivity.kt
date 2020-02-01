@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolBar()
 
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar)
+        val fapCallback = onClickedFapListener()
+
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -57,6 +59,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .commit()
         }
 
+    }
+
+    private fun onClickedFapListener(): FragmentManager.FAP {
+        return object : FragmentManager.FAP {
+            override fun onClick() {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, AddProductFragment(productViewModel))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun toolBar() {
@@ -94,5 +108,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawers()
         return true
+    }
+
+    interface FragmentManager {
+        interface FAP {
+            fun onClick()
+        }
     }
 }
