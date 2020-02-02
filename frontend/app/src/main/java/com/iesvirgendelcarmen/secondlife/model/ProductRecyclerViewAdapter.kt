@@ -1,5 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.model
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,8 +55,10 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
     override fun getFilter(): Filter {
         return object : Filter(){
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                productsList = results?.values as List<Product>
-                notifyDataSetChanged()
+                if (productsList != null && results != null && results.values != null) {
+                    productsList = results.values as List<Product>
+                    notifyDataSetChanged()
+                }
             }
 
             override fun performFiltering(constraint: CharSequence?): FilterResults {

@@ -19,11 +19,17 @@ import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View) :Fragment() {
+class ListProductsFragment :Fragment() {
+
+    private val productViewModel: ProductViewModel by lazy {
+        (activity as MainActivity).productViewModel
+    }
+
+    private val toolbar: View by lazy {
+        (activity as MainActivity).toolbar
+    }
 
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
-
-    constructor() : this(null!!, null!!)
 
     override fun onCreateView(
         inflater: LayoutInflater,

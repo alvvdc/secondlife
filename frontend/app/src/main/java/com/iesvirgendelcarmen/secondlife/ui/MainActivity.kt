@@ -19,7 +19,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val productViewModel: ProductViewModel by lazy {
+    public val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
     }
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.container, ListProductsFragment(productViewModel, toolbar))
+                .add(R.id.container, ListProductsFragment())
                 .commit()
         }
     }
