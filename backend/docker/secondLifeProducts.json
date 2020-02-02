@@ -1,7 +1,7 @@
 [
 	{
 		"publisher": 11,
-		"category": "motor",
+		"category": "MOTOR",
 		"title": "Ferrari rojo",
 		"description": "Impecable, nunca circuito.",
 		"price": 120000.0,
@@ -10,7 +10,7 @@
 	},
 	{
 		"publisher": 12,
-		"category": "motor",
+		"category": "MOTOR",
 		"title": "Lamborghini naranja bitcoin",
 		"description": "Pura libertad,",
 		"price": 440000.0,
@@ -20,7 +20,7 @@
 		
 	{
 		"publisher": 13,
-		"category": "inmobiliaria",
+		"category": "INMOBILIARIA",
 		"title": "Chalet en Ibiza",
 		"description": "400m², cerca de la costa.",
 		"price": 51000.0,
@@ -29,7 +29,7 @@
 	},
 	{
 		"publisher": 14,
-		"category": "inmobiliaria",
+		"category": "INMOBILIARIA",
 		"title": "Mansión en Panamá",
 		"description": "Pura libertad",
 		"price": 350000.0,
