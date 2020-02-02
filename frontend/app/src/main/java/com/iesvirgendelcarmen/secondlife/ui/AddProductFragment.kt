@@ -1,6 +1,13 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +19,7 @@ import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
+import java.io.ByteArrayOutputStream
 
 class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
 
@@ -23,6 +31,10 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
     lateinit var loadImage :Button
 
     private val NOT_SELECTED_CATEGORY = "Categoría"
+    private val IMAGE_REQUEST_CODE = 1
+    private val IMAGE_QUALITY = 50 // 0 .. 100 %
+
+    private val loadedImages = mutableListOf<String>()
 
     data class FormProduct (val title :String, val description :String, val price :String, val category :String)
 
@@ -48,10 +60,31 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
             val formProduct = FormProduct(title, description, price, category)
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.insertNewProduct(Product("", "5e3517e17e13c20483c3750d", formProduct.title, formProduct.description, formProduct.price.toFloat(), mutableListOf(), Category.parse(formProduct.category)))
+                productViewModel.insertNewProduct(Product("", "5e3517e17e13c20483c3750d", formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImages, Category.parse(formProduct.category)))
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
+        }
+
+        loadImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, IMAGE_REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
+
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            val base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
+
+            loadedImages.add(base64)
         }
     }
 
