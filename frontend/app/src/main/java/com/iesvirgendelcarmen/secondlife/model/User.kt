@@ -12,6 +12,17 @@ data class User (
     val type: Int
 )
 
+data class UserWithoutId (
+    val nickname: String,
+    val name: String,
+    val lastName1: String,
+    val lastName2: String,
+    val email: String,
+    val password: String,
+    val phone: String,
+    val type: Int
+)
+
 
 
 
