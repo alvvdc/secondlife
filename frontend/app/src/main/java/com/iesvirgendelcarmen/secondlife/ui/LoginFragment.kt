@@ -64,7 +64,12 @@ class LoginFragment : Fragment() {
         })
 
         register.setOnClickListener(View.OnClickListener {
-            Toast.makeText(context, "Register", Toast.LENGTH_SHORT).show()
+
+            fragmentManager!!
+                .beginTransaction()
+                .add(android.R.id.content, RegisterFragment())
+                .commit()
+
         })
     }
 

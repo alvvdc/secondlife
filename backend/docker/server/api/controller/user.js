@@ -19,7 +19,7 @@ module.exports = {
         }
         user.create(newUser, (err, result) => {
             if (err) 
-                res.status(500).json({error: 'Server failture'})
+                res.status(500).json({error: 'Server failture ' + err})
             else
                 res.status(201).json(result)
         })

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import com.iesvirgendelcarmen.secondlife.model.api.VolleySingleton
 import retrofit2.Call
 
@@ -26,7 +27,7 @@ object UserRepositoryVolley: UserRepositoryDataSource {
 
     }
 
-    override fun register(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun register(user: UserWithoutId, callback: UserRepositoryCallback.UserCallback) {
 
     }
 
