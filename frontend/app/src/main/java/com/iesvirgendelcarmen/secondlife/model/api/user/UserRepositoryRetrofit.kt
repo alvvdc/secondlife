@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object UserRepositoryRetrofit: UserRepositoryDataSource {
 
-    private lateinit var api : UserApi
+    private var api : UserApi
 
     init {
         val retrofit = Retrofit
@@ -80,7 +81,7 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         })
     }
 
-    override fun register(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun register(user: UserWithoutId, callback: UserRepositoryCallback.UserCallback) {
 
         val call = api.register(user)
         call.enqueue(object : Callback<User>{
