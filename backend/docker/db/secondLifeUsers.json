@@ -1,0 +1,7 @@
+[
+    {"id":1, "nickname": "beta", "name":"Alberto","lastName1":"Torres","lastName2":"Cruz","email":"albertodtres@gmail.com", "password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha","phone":"658745874","type":1},
+    {"id":2, "nickname": "admin", "name":"Steve","lastName1":"Smith","lastName2":"Brown","email":"admin@secondlife.com", "password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha","phone":"658745874","type":2}
+]
+
+
+

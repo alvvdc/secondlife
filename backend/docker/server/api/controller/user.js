@@ -1,4 +1,5 @@
 const user = require('../model/user')
+const token = require('../model/token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -19,24 +20,36 @@ module.exports = {
         }
         user.create(newUser, (err, result) => {
             if (err) 
-                res.status(500).json({error: 'Server failture'})
+                res.status(500).json({error: 'Server failture ' + err})
             else
                 res.status(201).json(result)
         })
     },
 
-    validate: (req, res) => {       
+    validate: (req, res) => {              
 
         user.findOne({email: req.body.email}, (err, userGiven) => {
             if (err) res.status(500).json({error: 'Incorrect mail'})        
             
             if (userGiven) {
                 if (bcrypt.compareSync(req.body.password, userGiven.password)){
-                    const token = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
-                                     
-                    res.json({
-                        token: token
+                    const tokenString = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
+                    
+                    const tokenCreated = {
+                        token: tokenString,
+                        email: req.body.email,
+                        expiration: new Date().setFullYear(new Date().getFullYear()+1)
+                    }
+
+                    token.create(tokenCreated, (err) => {
+                        if (err) 
+                            console.log('Token save failture ' + err);
                     })
+   
+                    res.json({
+                        token: tokenString
+                    })
+
                 } else 
                     res.status(404).json({error: 'Incorrect password'})
             } 
@@ -46,6 +59,8 @@ module.exports = {
     },
 
     getById: (req, res) => {                   
+
+        
 
         user.findOne({id: req.params.id}, (err, userGiven) => {
             if (err) return res.status(500).json({error: 'Incorrect user' + err})

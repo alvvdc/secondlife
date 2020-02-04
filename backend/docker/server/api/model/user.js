@@ -4,12 +4,6 @@ const saltRounds = 10
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    _id: {
-        type: Number,
-        required: true,
-        trim: true,
-        default: -1
-    }, 
     nickname: {
         type: String,
         required: true,
@@ -51,7 +45,7 @@ const userSchema = new Schema({
     type: {
         type: Number,
         trim: true,
-        default: 0
+        default: 1
     }
 
 }, {versionKey: false})
