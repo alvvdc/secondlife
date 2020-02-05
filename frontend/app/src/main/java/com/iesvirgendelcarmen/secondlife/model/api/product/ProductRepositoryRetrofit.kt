@@ -15,7 +15,7 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
     init {
         val retrofit = Retrofit
             .Builder()
-            .baseUrl(APIConfig.BASE_URL)
+            .baseUrl("${APIConfig.BASE_URL}/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
