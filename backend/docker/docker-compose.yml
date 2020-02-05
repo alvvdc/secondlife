@@ -14,7 +14,7 @@ services:
         container_name: mongo_seed
         build: 
             context: .
-            dockerfile: mongoDockerFile
+            dockerfile: dockerFiles/mongoDockerFile
         networks:
             - dev
         depends_on:
@@ -24,7 +24,7 @@ services:
         container_name: nodeSecondLife
         build: 
             context: .
-            dockerfile: nodeDockerFile
+            dockerfile: dockerFiles/nodeDockerFile
         command: npm run dev
         ports:
             - "7707:7707"
