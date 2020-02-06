@@ -46,12 +46,21 @@ const userSchema = new Schema({
         type: Number,
         trim: true,
         default: 1
+    },
+    image: {
+        type: String,
+        trim: true
     }
 
 }, {versionKey: false})
 
 userSchema.pre('save', function(next){
     this.password = bcrypt.hashSync(this.password, saltRounds);
+    next();
+})
+
+userSchema.pre('findOneAndUpdate', function(next){
+    this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
     next();
 })
 

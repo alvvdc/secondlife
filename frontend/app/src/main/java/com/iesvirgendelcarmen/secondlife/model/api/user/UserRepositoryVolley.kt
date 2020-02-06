@@ -19,11 +19,11 @@ object UserRepositoryVolley: UserRepositoryDataSource {
 
     }
 
-    override fun getUser(id: Int, callback: UserRepositoryCallback.UserCallback) {
+    override fun getUser(id: String, token: String, callback: UserRepositoryCallback.UserCallback) {
 
     }
 
-    override fun editUser(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun editUser(user: User, token: String, callback: UserRepositoryCallback.UserCallback) {
 
     }
 
@@ -35,7 +35,8 @@ object UserRepositoryVolley: UserRepositoryDataSource {
 
     }
 
-    override fun deleteUser(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun deleteUser(int: String, token: String, callback: UserRepositoryCallback.DeleteCallback
+    ) {
 
     }
 

@@ -42,9 +42,9 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         })
     }
 
-    override fun getUser(id: Int, callback: UserRepositoryCallback.UserCallback) {
+    override fun getUser(id: String, token: String, callback: UserRepositoryCallback.UserCallback) {
 
-        val call = api.getUser(id)
+        val call = api.getUser(id, token)
         call.enqueue(object : Callback<User>{
             override fun onFailure(call: Call<User>, t: Throwable) {
                 callback.onError(t.message)
@@ -58,18 +58,9 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         })
     }
 
-    override fun editUser(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun editUser(user: User, token: String, callback: UserRepositoryCallback.UserCallback) {
 
-        val call = api.editUser(
-            user.id,
-            user.nickname,
-            user.lastName1,
-            user.lastName2,
-            user.email,
-            user.password,
-            user.phone,
-            user.type
-        )
+        val call = api.editUser(token, user.id, user)
         call.enqueue(object : Callback<User>{
             override fun onFailure(call: Call<User>, t: Throwable) {
                 callback.onError(t.message)
@@ -91,7 +82,7 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful){
-                    val userResponse = response.body() ?: User(0,"","","","","","","",0)
+                    val userResponse = response.body() ?: User("","","","","","","","",0, "")
                     callback.onResponse(userResponse)
                 } else {
                     callback.onError(response.message())
@@ -111,7 +102,7 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
                 if (response.isSuccessful){
                     val tokenResponse = response.body()
-                    callback.onResponse(tokenResponse!!.token)
+                    callback.onResponse(tokenResponse!!)
                 } else {
                     callback.onError(response.message())
                 }
@@ -119,16 +110,15 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         })
     }
 
-    override fun deleteUser(user: User, callback: UserRepositoryCallback.UserCallback) {
+    override fun deleteUser(id: String, token: String, callback: UserRepositoryCallback.DeleteCallback) {
 
-        val call = api.deleteUser(user.id)
+        val call = api.deleteUser(token, id)
         call.enqueue(object : Callback<Void>{
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 callback.onError(t.message)
             }
 
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                callback.onResponse(user)
             }
         })
     }

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const token = require('../model/token')
 const user = require('../model/user')
 
-function tokenAuth(req, res, next) {
+function tokenAuth(req, res, next) { 
 
   jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
 
@@ -17,7 +17,9 @@ function tokenAuth(req, res, next) {
             if (err) res.status(500).json({ error: 'Incorrect mail' })
 
             if (userGiven) {
-              if (tokenGiven.email == userGiven.email) next();
+              if (tokenGiven.email == userGiven.email) {                
+                next();
+              }
               else res.status(404).json({ error: 'No tienes permisos' })
             }
             else res.status(404).json({ error: 'Incorrect mail' })
@@ -29,6 +31,7 @@ function tokenAuth(req, res, next) {
     }
   });
   
+
 }
 
 module.exports = tokenAuth

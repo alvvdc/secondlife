@@ -1,24 +1,27 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import android.widget.SearchView
+import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
+import android.widget.Toast
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.Category
+import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -28,38 +31,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     lateinit var listProductsFragment: ListProductsFragment
-
     lateinit var drawerLayout : DrawerLayout
     lateinit var toolbar: Toolbar
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var userID: String
+    lateinit var token: String
+    lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toolBar()
+        context = this
+        sharedPreferences = getSharedPreferences(APIConfig.CONFIG_FILE,0)
+        token = sharedPreferences.getString("token", "null")!!
+        userID = sharedPreferences.getString("userID", "null")!!
+        navigationDrawer()
+        changeHeaderData()
 
         listProductsFragment = ListProductsFragment(productViewModel, toolbar)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.container, listProductsFragment)
-                .commit()
-        }
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().add(R.id.container, listProductsFragment, "listProductFragment").commit()
 
-        var sharedPreferences = getSharedPreferences(APIConfig.CONFIG_FILE,0)
-
-        if (sharedPreferences.getString("token", "null") == "null"){
-            supportFragmentManager
-                .beginTransaction()
-                .add(android.R.id.content, LoginFragment())
-                .commit()
-        }
-
+        if (token == "null")
+            supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment()).commit()
     }
 
-    private fun toolBar() {
+    private fun navigationDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout)
         toolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu)
@@ -70,12 +70,51 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    companion object fun changeHeaderData() {
+        var navigationView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+        var editUser = navigationView.findViewById<ImageButton>(R.id.editUser)
+        var nameLastName = navigationView.findViewById<TextView>(R.id.nameLastName)
+        var email = navigationView.findViewById<TextView>(R.id.email)
+
+        if (token != "null") {
+            UserRepositoryRetrofit.getUser(userID, token,
+                object : UserRepositoryCallback.UserCallback {
+                    override fun onError(message: String?) {
+                        Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    override fun onLoading() {
+                    }
+
+                    override fun onResponse(user: User) {
+                        nameLastName.text = "${user.name} ${user.lastName1} ${user.lastName2}"
+                        email.text = user.email
+                    }
+                })
+        } else {
+            nameLastName.text = "Invitado"
+            email.text = ""
+        }
+
+        editUser.setOnClickListener(View.OnClickListener {
+            if (token != "null") {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, ProfileFragment(sharedPreferences)).commit()
+                drawerLayout.closeDrawers()
+            } else {
+                Toast.makeText(context, "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 
-        if (listProductsFragment == null)
-            return false
+        if (supportFragmentManager.findFragmentByTag("listProductFragment") == null)
+            supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment).commit()
 
         when (menuItem.itemId) {
+
             R.id.motor -> {
                 listProductsFragment.listProductsByCategory(Category.MOTOR)
             }
