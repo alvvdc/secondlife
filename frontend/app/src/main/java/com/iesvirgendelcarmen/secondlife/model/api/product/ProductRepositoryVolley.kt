@@ -107,12 +107,16 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)*/
     }
 
+    override fun visitProduct(productId: String, callback: ProductRepositoryCallback.VisitProduct) {
+
+    }
+
     override fun editProduct(product: Product, callback: ProductRepositoryCallback.EditProduct) {
         callback.onLoading()
 
         VolleySingleton.getInstance().requestQueue
 
-        val EDIT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product.id}"
+        val EDIT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
 
         val stringRequest = StringRequest (
             Request.Method.PUT,

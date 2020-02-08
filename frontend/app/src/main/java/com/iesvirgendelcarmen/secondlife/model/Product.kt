@@ -1,7 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.model
 
 data class Product (
-    var id: String,
+    var _id: String,
     var publisher: String,
     var title :String,
     var description :String,
