@@ -16,7 +16,7 @@ import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View) :Fragment() {
+class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View, val productViewListener: ProductRecyclerViewAdapter.ProductViewListener) :Fragment() {
 
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
 
@@ -29,7 +29,7 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val recyclerViewProducts = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
-        productRecyclerViewAdapter = ProductRecyclerViewAdapter(emptyList())
+        productRecyclerViewAdapter = ProductRecyclerViewAdapter(emptyList(), productViewListener)
 
         recyclerViewProducts.apply {
             adapter = productRecyclerViewAdapter

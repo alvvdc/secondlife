@@ -19,6 +19,7 @@ import android.widget.TextView
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.Category
+import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -39,7 +40,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolBar()
 
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar)
+        val productViewListener =  object : ProductRecyclerViewAdapter.ProductViewListener {
+            override fun onClick(product: Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, DetailProductFragment(product))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar, productViewListener)
 
         if (savedInstanceState == null) {
             supportFragmentManager
