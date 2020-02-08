@@ -116,6 +116,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.servicios -> {
                 listProductsFragment.listProductsByCategory(Category.SERVICIOS)
             }
+            R.id.otros -> {
+                listProductsFragment.listProductsByCategory(Category.OTROS)
+            }
             R.id.inicio -> {
                 listProductsFragment.listAllProducts()
             }
