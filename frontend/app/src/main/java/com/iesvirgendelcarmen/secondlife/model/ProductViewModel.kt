@@ -13,6 +13,7 @@ class ProductViewModel : ViewModel() {
     //val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
     val productLiveData = MutableLiveData<Resource<Product>>()
+    val productVisitsLiveData = MutableLiveData<Resource<ProductVisits>>()
 
     private val productRepository : ProductRepositoryDataSource = ProductRepositoryRetrofit
 
@@ -74,6 +75,19 @@ class ProductViewModel : ViewModel() {
 
             override fun onError(message: String) {
                 productLiveData.value = Resource.error(message, Product("", "", "", "", 0f, mutableListOf(), Category.OTROS))
+            }
+
+        })
+    }
+
+    fun visitProduct(productId :String) {
+        productRepository.visitProduct(productId, object : ProductRepositoryCallback.VisitProduct {
+            override fun onResponse(productVisits: ProductVisits) {
+                productVisitsLiveData.value = Resource.success(productVisits)
+            }
+
+            override fun onError(message: String) {
+                productVisitsLiveData.value = Resource.error(message, ProductVisits("", -1))
             }
 
         })

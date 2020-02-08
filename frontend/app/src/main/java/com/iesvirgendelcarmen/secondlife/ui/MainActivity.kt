@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onClick(product: Product) {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product))
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel))
                     .addToBackStack(null)
                     .commit()
             }
