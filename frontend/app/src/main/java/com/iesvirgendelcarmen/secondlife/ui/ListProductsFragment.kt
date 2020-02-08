@@ -1,6 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +14,24 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Category
+import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
 class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View, val fapCallback :MainActivity.FragmentManager.FAP, val productViewListener: ProductRecyclerViewAdapter.ProductViewListener) :Fragment() {
 
+    var lastProductsListObtained = emptyList<Product>()
     lateinit var addProductFAP :FloatingActionButton
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            productViewModel.getUnsoldProducts()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +85,7 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
                 Resource.Status.SUCCESS -> {
                     productRecyclerViewAdapter.productsList = resource.data
                     productRecyclerViewAdapter.notifyDataSetChanged()
+                    lastProductsListObtained = resource.data
                 }
                 Resource.Status.ERROR -> {
                     Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
@@ -83,15 +95,20 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
                 }
             }
         })
-
-        productViewModel.getUnsoldProducts()
     }
 
     fun listProductsByCategory(category: Category) {
-        productViewModel.getUnsoldProductsByCategory(category)
+        //productViewModel.getUnsoldProductsByCategory(category)
+
+        val filteredProductList = lastProductsListObtained.filter { product -> product.category == category }
+        productRecyclerViewAdapter.productsList = filteredProductList
+        productRecyclerViewAdapter.notifyDataSetChanged()
     }
 
     fun listAllProducts() {
-        productViewModel.getUnsoldProducts()
+        //productViewModel.getUnsoldProducts()
+
+        productRecyclerViewAdapter.productsList = lastProductsListObtained
+        productRecyclerViewAdapter.notifyDataSetChanged()
     }
 }

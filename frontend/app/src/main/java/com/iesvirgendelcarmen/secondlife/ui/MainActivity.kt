@@ -16,6 +16,7 @@ import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.Category
@@ -124,6 +125,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         drawerLayout.closeDrawers()
+
+
+        val activeFragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (activeFragment !is ListProductsFragment) {
+            supportFragmentManager.popBackStack()
+        }
         return true
     }
 

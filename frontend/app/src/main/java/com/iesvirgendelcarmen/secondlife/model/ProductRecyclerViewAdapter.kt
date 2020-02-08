@@ -56,7 +56,7 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>, val productVie
                     .into(productImage)
             }
 
-            productImage.setOnClickListener {
+            itemView.setOnClickListener {
                 productViewListener.onClick(product)
             }
         }
