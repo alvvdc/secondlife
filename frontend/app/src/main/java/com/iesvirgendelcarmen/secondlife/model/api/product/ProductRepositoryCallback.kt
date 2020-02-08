@@ -9,6 +9,11 @@ interface ProductRepositoryCallback {
         fun onLoading()
     }
 
+    interface OneProduct {
+        fun onResponse(product: Product)
+        fun onError(message :String)
+    }
+
     interface EditProduct {
         fun onResponse(product: Product)
         fun onError(message :String)

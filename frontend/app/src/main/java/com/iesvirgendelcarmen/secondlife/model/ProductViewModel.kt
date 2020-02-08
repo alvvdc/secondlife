@@ -12,6 +12,8 @@ class ProductViewModel : ViewModel() {
 
     //val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
+    val productLiveData = MutableLiveData<Resource<Product>>()
+
     private val productRepository : ProductRepositoryDataSource = ProductRepositoryRetrofit
 
     init {
@@ -48,7 +50,7 @@ class ProductViewModel : ViewModel() {
     }
 
     fun getUnsoldProductsByCategory(category: Category) {
-        productRepository.getUnsoldProductsByCategory(category.toString().toLowerCase(), object : ProductRepositoryCallback.ListProducts {
+        productRepository.getUnsoldProductsByCategory(category.toString(), object : ProductRepositoryCallback.ListProducts {
             override fun onResponse(products: List<Product>) {
                 productListLiveData.value = Resource.success(products)
             }
@@ -59,6 +61,19 @@ class ProductViewModel : ViewModel() {
 
             override fun onLoading() {
                 productListLiveData.value = Resource.loading(emptyList())
+            }
+
+        })
+    }
+
+    fun insertNewProduct(product: Product) {
+        productRepository.postNewProduct(product, object : ProductRepositoryCallback.OneProduct {
+            override fun onResponse(product: Product) {
+                productLiveData.value = Resource.success(product)
+            }
+
+            override fun onError(message: String) {
+                productLiveData.value = Resource.error(message, Product("", "", "", "", 0f, mutableListOf(), Category.OTROS))
             }
 
         })

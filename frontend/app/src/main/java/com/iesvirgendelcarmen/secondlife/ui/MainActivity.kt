@@ -40,17 +40,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolBar()
 
-        val productViewListener =  object : ProductRecyclerViewAdapter.ProductViewListener {
-            override fun onClick(product: Product) {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product))
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
+        val productViewListener = onClickProductForDetail()
+        val fapCallback = onClickedFapListener()
 
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar, productViewListener)
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback, productViewListener)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -68,6 +61,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .commit()
         }
 
+    }
+
+    private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
+        return object : ProductRecyclerViewAdapter.ProductViewListener {
+            override fun onClick(product: Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, DetailProductFragment(product))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+    }
+
+    private fun onClickedFapListener(): FragmentManager.FAP {
+        return object : FragmentManager.FAP {
+            override fun onClick() {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, AddProductFragment(productViewModel))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun toolBar() {
@@ -107,4 +124,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    interface FragmentManager {
+        interface FAP {
+            fun onClick()
+        }
+    }
 }

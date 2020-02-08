@@ -1,7 +1,10 @@
 package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
+import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.Product
+import com.iesvirgendelcarmen.secondlife.model.ProductDto
+import com.iesvirgendelcarmen.secondlife.model.ProductMapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,6 +55,22 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 val responseProducts = response.body().orEmpty()
                 callback.onResponse(responseProducts)
+            }
+
+        })
+    }
+
+    override fun postNewProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.postNewProduct(ProductMapper.transformObjectBoToDto(product))
+
+        call.enqueue(object : Callback<Product> {
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                val responseProduct = response.body() ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS)
+                callback.onResponse(responseProduct)
             }
 
         })
