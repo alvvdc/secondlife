@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
-
-
-<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -28,7 +23,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline8"
@@ -42,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.07" />
+                app:layout_constraintGuide_percent="0.1" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintAuthor"
@@ -59,7 +54,7 @@
                 <ImageView
                     android:id="@+id/publisherImage"
                     android:layout_width="40dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -67,15 +62,13 @@
 
                 <TextView
                     android:id="@+id/publisherName"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:gravity="center_vertical"
                     android:text="Autor"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@+id/publisherImage"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/publisherImage"
                     app:layout_constraintTop_toTopOf="@+id/publisherImage" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -113,7 +106,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -133,20 +126,25 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/productDescription"
+                <ScrollView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut convallis orci pharetra, egestas lorem eget, posuere est. Suspendisse eget erat ut quam bibendum ullamcorper. Duis et ultrices justo. Donec sit amet tortor eget mauris pretium venenatis a quis elit. Mauris tempor sem nec quam porta, nec porta nisi dapibus. Nunc quis turpis ex. Duis sollicitudin vestibulum sapien id viverra. Fusce porta lacinia eleifend."
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@+id/imageView9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/productTitle" />
+                    app:layout_constraintTop_toBottomOf="@+id/productTitle">
+
+                    <TextView
+                        android:id="@+id/productDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vitae diam sed eros convallis ultrices. Ut efficitur neque arcu, quis aliquam sem euismod at. Proin id velit eu ex lacinia vehicula. Duis sed diam dignissim, blandit elit id, facilisis mauris. Phasellus a nisl nec odio ornare lobortis sit amet sit amet lectus. Proin ac pulvinar libero. Etiam luctus vestibulum nulla, quis accumsan tellus ullamcorper dapibus. Donec vestibulum consequat tristique. Nunc faucibus neque vel lacus hendrerit egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc imperdiet, dolor a elementum scelerisque, arcu elit vestibulum leo, a pretium felis felis ac sapien. Morbi ut elit viverra, laoreet lacus id, dignissim libero. Mauris aliquet efficitur lobortis. Nullam eget tempor leo. Vivamus et dui convallis, tristique nulla ac, interdum sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+                </ScrollView>
 
                 <TextView
                     android:id="@+id/productVisits"
@@ -197,4 +195,3 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

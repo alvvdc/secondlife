@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
 
-class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
+class ProductRecyclerViewAdapter(var productsList :List<Product>, val productViewListener: ProductViewListener) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
 
     lateinit var lista : List<Product>
 
@@ -40,8 +40,6 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
         fun bind(product :Product) {
             productTitle.text = product.title
             productDescription.text = product.description
-
-            Double
             productPrice.text = "${product.price.toInt()}€"
 
             if (product.images.size > 0) {
@@ -49,6 +47,10 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
                     .with(itemView)
                     .load(product.images[0])
                     .into(productImage)
+            }
+
+            productImage.setOnClickListener {
+                productViewListener.onClick(product)
             }
         }
     }
@@ -75,5 +77,9 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
                 return filterResults
             }
         }
+    }
+
+    interface ProductViewListener {
+        fun onClick(product: Product)
     }
 }
