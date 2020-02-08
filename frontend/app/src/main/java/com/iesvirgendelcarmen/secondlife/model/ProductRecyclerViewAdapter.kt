@@ -1,5 +1,8 @@
 package com.iesvirgendelcarmen.secondlife.model
 
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,9 +46,13 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>, val productVie
             productPrice.text = "${product.price.toInt()}€"
 
             if (product.images.size > 0) {
+
+                val decoded = Base64.decode(product.images[0], Base64.NO_WRAP)
+                val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+
                 Glide
                     .with(itemView)
-                    .load(product.images[0])
+                    .load(bitmap)
                     .into(productImage)
             }
 
