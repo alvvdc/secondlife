@@ -74,8 +74,7 @@ class DetailProductFragment(val product: Product, val productViewModel :ProductV
         productViewModel.productVisitsLiveData.observe(viewLifecycleOwner, Observer {
             productVisits.text = it.data.visits.toString()
         })
-
-        Log.d("ALVARO", product.toString())
+        
         productViewModel.visitProduct(product._id)
     }
 }
