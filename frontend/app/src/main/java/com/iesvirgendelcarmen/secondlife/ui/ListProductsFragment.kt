@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Category
@@ -23,6 +24,7 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
 
     var lastProductsListObtained = emptyList<Product>()
     lateinit var addProductFAP :FloatingActionButton
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,11 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
 
         onSearchListener()
         onClickedFAP(view)
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            productViewModel.getUnsoldProducts()
+        }
     }
 
     private fun onClickedFAP(view: View) {
@@ -86,12 +93,14 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
                     productRecyclerViewAdapter.productsList = resource.data
                     productRecyclerViewAdapter.notifyDataSetChanged()
                     lastProductsListObtained = resource.data
+                    swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.ERROR -> {
                     Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+                    swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.LOADING -> {
-
+                    swipeRefreshLayout.isRefreshing = true
                 }
             }
         })
