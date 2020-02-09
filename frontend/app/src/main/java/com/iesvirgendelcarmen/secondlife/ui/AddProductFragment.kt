@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Category
 import com.iesvirgendelcarmen.secondlife.model.Product
@@ -27,7 +28,11 @@ import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
+class AddProductFragment : Fragment() {
+
+    private val productViewModel: ProductViewModel by lazy {
+        ViewModelProviders.of(this).get(ProductViewModel::class.java)
+    }
 
     lateinit var titleEditText :EditText
     lateinit var descriptionEditText :EditText
@@ -154,6 +159,7 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
                 }
                 Resource.Status.SUCCESS -> {
                     Toast.makeText(context, "Enviado", Toast.LENGTH_SHORT).show()
+                    fragmentManager?.popBackStack()
                 }
             }
         })
