@@ -1,17 +1,22 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.app.ActionBar
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.AttributeSet
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.iesvirgendelcarmen.secondlife.R
@@ -20,6 +25,7 @@ import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
 
@@ -29,10 +35,11 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
     lateinit var categorySpinner :Spinner
     lateinit var save :Button
     lateinit var loadImage :Button
+    lateinit var buttonsLayout :LinearLayout
 
     private val NOT_SELECTED_CATEGORY = "Categoría"
     private val IMAGE_REQUEST_CODE = 1
-    private val IMAGE_QUALITY = 50 // 0 .. 100 %
+    private val IMAGE_QUALITY = 10 // 0 .. 100 %
 
     private val loadedImages = mutableListOf<String>()
 
@@ -84,8 +91,27 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
             val byteArray = byteArrayOutputStream.toByteArray()
             val base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
 
+            val path = data?.data?.path
+            val file = File(path)
+            val filename = file.name
             loadedImages.add(base64)
+            addButtonForImageAdded(filename)
         }
+    }
+
+    private fun addButtonForImageAdded(text :String) :Button {
+        val button = Button(context, null, 0, R.style.AppTheme_ButtonCustom)
+        button.text = text
+
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.setMargins(0, 0, 0, 10)
+        button.layoutParams = layoutParams
+
+        buttonsLayout.addView(button)
+        return button
     }
 
     private fun areFieldsFilled(formProduct: FormProduct) :Boolean {
@@ -101,6 +127,7 @@ class AddProductFragment(val productViewModel: ProductViewModel) : Fragment() {
         priceEditText = view.findViewById(R.id.price)
         save = view.findViewById(R.id.save)
         loadImage = view.findViewById(R.id.loadImages)
+        buttonsLayout = view.findViewById(R.id.buttonsLayout)
     }
 
     private fun loadSpinner(view: View) {

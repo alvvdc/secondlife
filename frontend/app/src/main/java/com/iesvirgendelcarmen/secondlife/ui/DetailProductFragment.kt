@@ -1,6 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -45,16 +46,33 @@ class DetailProductFragment(val product: Product, val productViewModel :ProductV
         productDescription.text = product.description
         productPrice.text = "${product.price}€"
 
-        if (product.images.size > 0) {
 
-            val decoded = Base64.decode(product.images[0], Base64.NO_WRAP)
+        val bitmapsList = mutableListOf<Bitmap>()
+        for (image in product.images) {
+            val decoded = Base64.decode(image, Base64.NO_WRAP)
             val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
-
-            Glide
-                .with(productImage)
-                .load(bitmap)
-                .into(productImage)
+            bitmapsList.add(bitmap)
         }
+
+        if (bitmapsList.size > 0) {
+            setProductImage(bitmapsList[0])
+        }
+
+        var index = 0
+        productImage.setOnClickListener {
+
+            if (index+1 < bitmapsList.size) index += 1
+            else index = 0
+
+            setProductImage(bitmapsList[index])
+        }
+    }
+
+    private fun setProductImage(image :Bitmap) {
+        Glide
+            .with(this)
+            .load(image)
+            .into(productImage)
     }
 
     private fun findViewsById(view: View) {

@@ -89,8 +89,7 @@ const writeImages = (imagesArray, callback) => {
 const writeImagesSync = (imagesArray) => {
     const imagesFilenames = []
 
-    if (imagesArray.length > 0) {
-        const image = imagesArray[0]
+    for (let image of imagesArray) {
         imagesFilenames.push(images.writeImageSync(image))
     }
     return imagesFilenames
