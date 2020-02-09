@@ -17,7 +17,17 @@
 
 ![Diagrama](docs/DiagramaClases/DiagramaClases.png)
 
+## Tipos de usuarios:
+
+- Tipo 1: Usuario estandar
+- Tipo 2: Usuario administrador
+
 ## Docker:
+
+#### Generar los contenedores:
+```bash
+docker-compose up
+```
 
 #### Iniciar / Parar:
 ```bash

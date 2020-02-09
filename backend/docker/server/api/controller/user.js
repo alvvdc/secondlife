@@ -1,4 +1,5 @@
 const user = require('../model/user')
+const token = require('../model/token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -7,7 +8,6 @@ module.exports = {
     create: (req, res, next) => {
 
         const newUser = {
-            id: req.body.id,
             nickname: req.body.nickname,
             name: req.body.name,
             lastName1: req.body.lastName1,
@@ -19,24 +19,36 @@ module.exports = {
         }
         user.create(newUser, (err, result) => {
             if (err) 
-                res.status(500).json({error: 'Server failture'})
+                res.status(500).json({error: 'Server failture ' + err})
             else
                 res.status(201).json(result)
         })
     },
 
-    validate: (req, res) => {       
+    validate: (req, res) => {              
 
         user.findOne({email: req.body.email}, (err, userGiven) => {
             if (err) res.status(500).json({error: 'Incorrect mail'})        
             
             if (userGiven) {
                 if (bcrypt.compareSync(req.body.password, userGiven.password)){
-                    const token = jwt.sign({id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
-                                     
-                    res.json({
-                        token: token
+                    const tokenString = jwt.sign({_id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
+                    
+                    const tokenCreated = {
+                        token: tokenString,
+                        email: req.body.email,
+                        expiration: new Date().setFullYear(new Date().getFullYear()+1)
+                    }
+
+                    token.create(tokenCreated, (err) => {
+                        if (err) 
+                            console.log('Token save failture ' + err);
                     })
+   
+                    res.json({
+                        token: tokenString
+                    })
+
                 } else 
                     res.status(404).json({error: 'Incorrect password'})
             } 
@@ -47,7 +59,7 @@ module.exports = {
 
     getById: (req, res) => {                   
 
-        user.findOne({id: req.params.id}, (err, userGiven) => {
+        user.findOne({_id: req.params.id}, (err, userGiven) => {
             if (err) return res.status(500).json({error: 'Incorrect user' + err})
             if (!userGiven) return res.status(404).json({status: 'No user'}) 
             res.status(200).json({userGiven})
@@ -65,7 +77,7 @@ module.exports = {
 
     update: (req, res) => {
         
-        user.findOneAndUpdate({id: req.params.id}, req.body, (err, userGiven) => {
+        user.findOneAndUpdate({_id: req.params.id}, req.body, (err, userGiven) => {
             if (err) res.status(500).json({error: 'Error updating user'})
             else res.status(200).json({status: 'User updated'})
         })
@@ -74,7 +86,7 @@ module.exports = {
 
     delete: (req, res) => {
 
-        user.findOne({id: req.params.id}, (err, userGiven) => {
+        user.findOne({_id: req.params.id}, (err, userGiven) => {
             if (err) return res.status(500).json({error: 'Incorrect user'})
 
             if (userGiven) {

@@ -16,9 +16,11 @@ import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.Category
+import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -39,9 +41,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolBar()
 
+        val productViewListener = onClickProductForDetail()
         val fapCallback = onClickedFapListener()
 
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback)
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback, productViewListener)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -59,6 +62,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .commit()
         }
 
+    }
+
+    private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
+        return object : ProductRecyclerViewAdapter.ProductViewListener {
+            override fun onClick(product: Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun onClickedFapListener(): FragmentManager.FAP {
@@ -102,11 +117,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.servicios -> {
                 listProductsFragment.listProductsByCategory(Category.SERVICIOS)
             }
+            R.id.otros -> {
+                listProductsFragment.listProductsByCategory(Category.OTROS)
+            }
             R.id.inicio -> {
                 listProductsFragment.listAllProducts()
             }
         }
         drawerLayout.closeDrawers()
+
+
+        val activeFragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (activeFragment !is ListProductsFragment) {
+            supportFragmentManager.popBackStack()
+        }
         return true
     }
 
