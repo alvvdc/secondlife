@@ -17,6 +17,7 @@ import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.iesvirgendelcarmen.secondlife.R
+import kotlin.math.log
 
 
 class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
@@ -88,14 +89,20 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                     DialogInterface.OnClickListener { dialog, which ->
 
                         UserRepositoryRetrofit.deleteUser(userID, token, object:UserRepositoryCallback.DeleteCallback{
-                            override fun onResponse() {
+                            override fun onResponse(message: String?) {
+
                                 sharedPreferences.edit()
                                     .remove("userID")
                                     .remove("token")
                                     .apply()
+
+                                var activity = (activity as MainActivity)
+                                activity.changeHeaderData()
+                                activity.chargeProducts()
                             }
 
                             override fun onError(message: String?) {
+                                Toast.makeText(context, "Error al borrar tu usuario", Toast.LENGTH_SHORT).show()
                             }
 
                             override fun onLoading() {
@@ -118,10 +125,6 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
         image: String,
         token: String
     ) {
-        var passwordSaved1 = passwordSaved
-        if (password.text.isNotEmpty()) {
-            passwordSaved1 = password.text.toString()
-        }
 
         if (checkPassword()) {
 
@@ -134,13 +137,11 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                     lastName1.text.toString(),
                     lastName2.text.toString(),
                     email.text.toString(),
-                    passwordSaved1,
+                    password.text.toString(),
                     phone.text.toString(),
                     type,
                     image
                 )
-
-                Log.i("Alberto", "Usuario enviado: " + user.toString())
 
                 UserRepositoryRetrofit.editUser(
                     user,
@@ -152,7 +153,6 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                                 "Usuario actualizado con exito",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Log.i("Alberto", user.toString())
                         }
 
                         override fun onError(message: String?) {

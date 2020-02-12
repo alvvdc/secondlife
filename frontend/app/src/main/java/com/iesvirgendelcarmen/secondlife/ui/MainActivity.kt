@@ -52,11 +52,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         listProductsFragment = ListProductsFragment(productViewModel, toolbar)
 
-        if (savedInstanceState == null)
-            supportFragmentManager.beginTransaction().add(R.id.container, listProductsFragment, "listProductFragment").commit()
+        if (savedInstanceState == null) chargeProducts()
 
         if (token == "null")
             supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment()).commit()
+    }
+
+    fun chargeProducts() {
+            supportFragmentManager.beginTransaction().add(
+                R.id.container,
+                listProductsFragment,
+                "listProductFragment"
+            ).commit()
     }
 
     private fun navigationDrawer() {
@@ -70,18 +77,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
-    companion object fun changeHeaderData() {
+    fun changeHeaderData() {
         var navigationView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
         var editUser = navigationView.findViewById<ImageButton>(R.id.editUser)
         var nameLastName = navigationView.findViewById<TextView>(R.id.nameLastName)
         var email = navigationView.findViewById<TextView>(R.id.email)
 
+        token = sharedPreferences.getString("token", "null")!!
+        userID = sharedPreferences.getString("userID", "null")!!
+
         if (token != "null") {
             UserRepositoryRetrofit.getUser(userID, token,
                 object : UserRepositoryCallback.UserCallback {
                     override fun onError(message: String?) {
-                        Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onLoading() {

@@ -114,12 +114,15 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
 
         val call = api.deleteUser(token, id)
         call.enqueue(object : Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                callback.onResponse(response.message())
+            }
+
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 callback.onError(t.message)
             }
 
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-            }
+
         })
     }
 

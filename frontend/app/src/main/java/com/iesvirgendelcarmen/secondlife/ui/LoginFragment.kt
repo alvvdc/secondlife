@@ -23,6 +23,9 @@ import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryDataSource
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 
 
+
+
+
 class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,12 +69,12 @@ class LoginFragment : Fragment() {
                     .putString("token", token.token)
                     .putString("userID", token.userId)
                     .apply()
+                (activity as MainActivity).changeHeaderData()
                 exit()
             }
 
             override fun onError(message: String?) {
-                Toast.makeText(context, "Usuario o contraseña incorrecta", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(context, "Usuario o contraseña incorrecta", Toast.LENGTH_SHORT).show()
             }
 
             override fun onLoading() {

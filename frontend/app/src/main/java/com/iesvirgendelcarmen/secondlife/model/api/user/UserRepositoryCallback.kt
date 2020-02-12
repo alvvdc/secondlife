@@ -18,7 +18,7 @@ interface UserRepositoryCallback {
     }
 
     interface DeleteCallback {
-        fun onResponse()
+        fun onResponse(message: String?)
         fun onError(message: String?)
         fun onLoading()
     }

@@ -60,7 +60,12 @@ userSchema.pre('save', function(next){
 })
 
 userSchema.pre('findOneAndUpdate', function(next){
-    this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
+
+    if (this._update.password != "")
+        this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
+    else 
+         delete this._update.password
+
     next();
 })
 
