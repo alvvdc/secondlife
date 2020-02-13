@@ -1,6 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,29 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Category
+import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View) :Fragment() {
+class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View, val fapCallback :MainActivity.FragmentManager.FAP, val productViewListener: ProductRecyclerViewAdapter.ProductViewListener) :Fragment() {
 
+    var lastProductsListObtained = emptyList<Product>()
+    lateinit var addProductFAP :FloatingActionButton
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            productViewModel.getUnsoldProducts()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,16 +44,33 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val recyclerViewProducts = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
-        productRecyclerViewAdapter = ProductRecyclerViewAdapter(emptyList())
+        productRecyclerViewAdapter = ProductRecyclerViewAdapter(emptyList(), productViewListener)
 
         recyclerViewProducts.apply {
             adapter = productRecyclerViewAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
 
-        var busqueda : SearchView = toolbar.findViewById(R.id.busqueda)
+        onSearchListener()
+        onClickedFAP(view)
 
-        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            productViewModel.getUnsoldProducts()
+        }
+    }
+
+    private fun onClickedFAP(view: View) {
+        addProductFAP = view.findViewById(R.id.addProductFAP)
+        addProductFAP.setOnClickListener {
+            fapCallback.onClick()
+        }
+    }
+
+    private fun onSearchListener() {
+        var busqueda: SearchView = toolbar.findViewById(R.id.busqueda)
+
+        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -49,8 +81,6 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
             }
 
         })
-
-
     }
 
     override fun onStart() {
@@ -62,24 +92,32 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
                 Resource.Status.SUCCESS -> {
                     productRecyclerViewAdapter.productsList = resource.data
                     productRecyclerViewAdapter.notifyDataSetChanged()
+                    lastProductsListObtained = resource.data
+                    swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.ERROR -> {
                     Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+                    swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.LOADING -> {
-
+                    swipeRefreshLayout.isRefreshing = true
                 }
             }
         })
-
-        productViewModel.getUnsoldProducts()
     }
 
     fun listProductsByCategory(category: Category) {
-        productViewModel.getUnsoldProductsByCategory(category)
+        //productViewModel.getUnsoldProductsByCategory(category)
+
+        val filteredProductList = lastProductsListObtained.filter { product -> product.category == category }
+        productRecyclerViewAdapter.productsList = filteredProductList
+        productRecyclerViewAdapter.notifyDataSetChanged()
     }
 
     fun listAllProducts() {
-        productViewModel.getUnsoldProducts()
+        //productViewModel.getUnsoldProducts()
+
+        productRecyclerViewAdapter.productsList = lastProductsListObtained
+        productRecyclerViewAdapter.notifyDataSetChanged()
     }
 }

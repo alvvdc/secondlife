@@ -13,13 +13,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.iesvirgendelcarmen.secondlife.R
-import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Category
-import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.*
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 
@@ -50,7 +49,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationDrawer()
         changeHeaderData()
 
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar)
+        val productViewListener = onClickProductForDetail()
+        val fapCallback = onClickedFapListener()
+
+        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback, productViewListener)
 
         if (savedInstanceState == null) chargeProducts()
 
@@ -64,6 +66,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 listProductsFragment,
                 "listProductFragment"
             ).commit()
+    }
+
+    private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
+        return object : ProductRecyclerViewAdapter.ProductViewListener {
+            override fun onClick(product: Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+    }
+
+    private fun onClickedFapListener(): FragmentManager.FAP {
+        return object : FragmentManager.FAP {
+            override fun onClick() {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, AddProductFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun navigationDrawer() {
@@ -136,12 +162,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.servicios -> {
                 listProductsFragment.listProductsByCategory(Category.SERVICIOS)
             }
+            R.id.otros -> {
+                listProductsFragment.listProductsByCategory(Category.OTROS)
+            }
             R.id.inicio -> {
                 listProductsFragment.listAllProducts()
             }
         }
         drawerLayout.closeDrawers()
+
+
+        val activeFragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (activeFragment !is ListProductsFragment) {
+            supportFragmentManager.popBackStack()
+        }
         return true
     }
 
+    interface FragmentManager {
+        interface FAP {
+            fun onClick()
+        }
+    }
 }

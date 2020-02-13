@@ -1,7 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Product
+import com.iesvirgendelcarmen.secondlife.model.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,11 +57,43 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
         })
     }
 
+    override fun postNewProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.postNewProduct(ProductMapper.transformObjectBoToDto(product))
+
+        call.enqueue(object : Callback<Product> {
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                val responseProduct = response.body() ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS)
+                callback.onResponse(responseProduct)
+            }
+
+        })
+    }
+
+    override fun visitProduct(productId: String, callback: ProductRepositoryCallback.VisitProduct) {
+        val call = api.visitProduct(productId)
+
+        call.enqueue(object : Callback<ProductVisits> {
+            override fun onFailure(call: Call<ProductVisits>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<ProductVisits>, response: Response<ProductVisits>) {
+                val responseProductVisits = response.body() ?: ProductVisits("", -1)
+                callback.onResponse(responseProductVisits)
+            }
+
+        })
+    }
+
     override fun editProduct(product: Product, callback: ProductRepositoryCallback.EditProduct) {
         callback.onLoading()
 
         val call = api.editProduct(
-            product.id,
+            product._id,
             product.publisher,
             product.title,
             product.description,

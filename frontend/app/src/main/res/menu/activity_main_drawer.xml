@@ -34,6 +34,10 @@
                     android:id="@+id/servicios"
                     android:icon="@drawable/ic_local_offer"
                     android:title="Servicios" />
+                <item
+                    android:id="@+id/otros"
+                    android:icon="@drawable/ic_all_inclusive"
+                    android:title="Otros"/>
             </group>
         </menu>
     </item>

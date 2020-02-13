@@ -5,7 +5,7 @@ const productRoutes = require('../route/product')
 const app = express()
 
 app.set('secretKey', 'vivaManolo')
-app.use(bodyParser.json())
+app.use(bodyParser.json( {limit: '10mb', extended: true} ))
 app.use('/api', userRoutes)
 app.use('/api/product/', productRoutes)
 

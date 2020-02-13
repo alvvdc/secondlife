@@ -9,9 +9,9 @@ const productSchema = new Schema({
     },
     category : {
         type: String,
-        enum: ['motor', 'inmobiliaria', 'empleo', 'servicios', 'otros'],
+        enum: ['MOTOR', 'INMOBILIARIA', 'EMPLEO', 'SERVICIOS', 'OTROS'],
         required: true,
-        default: 'otros'
+        default: 'OTROS'
     },
     title : {
         type: String,

@@ -2,6 +2,8 @@ package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Product
+import com.iesvirgendelcarmen.secondlife.model.ProductDto
+import com.iesvirgendelcarmen.secondlife.model.ProductVisits
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -11,6 +13,12 @@ interface ProductApi {
 
     @GET("${APIConfig.PRODUCT_ROUTE}/{category}")
     fun getUnsoldProductsByCategory(@Path("category") category :String) :Call<List<Product>>
+
+    @POST(APIConfig.PRODUCT_ROUTE)
+    fun postNewProduct(@Body product : ProductDto) :Call<Product>
+
+    @GET("${APIConfig.PRODUCT_ROUTE}/{id}/visit")
+    fun visitProduct(@Path("id") productId :String) :Call<ProductVisits>
 
     @FormUrlEncoded
     @PUT("${APIConfig.PRODUCT_ROUTE}/{id}")

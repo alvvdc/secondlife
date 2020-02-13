@@ -1,5 +1,8 @@
 package com.iesvirgendelcarmen.secondlife.model
 
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
 
-class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
+class ProductRecyclerViewAdapter(var productsList :List<Product>, val productViewListener: ProductViewListener) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductViewHolder>(), Filterable {
 
     lateinit var lista : List<Product>
 
@@ -40,15 +43,21 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
         fun bind(product :Product) {
             productTitle.text = product.title
             productDescription.text = product.description
-
-            Double
             productPrice.text = "${product.price.toInt()}€"
 
             if (product.images.size > 0) {
+
+                val decoded = Base64.decode(product.images[0], Base64.NO_WRAP)
+                val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+
                 Glide
                     .with(itemView)
-                    .load(product.images[0])
+                    .load(bitmap)
                     .into(productImage)
+            }
+
+            itemView.setOnClickListener {
+                productViewListener.onClick(product)
             }
         }
     }
@@ -75,5 +84,9 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>) : RecyclerView
                 return filterResults
             }
         }
+    }
+
+    interface ProductViewListener {
+        fun onClick(product: Product)
     }
 }

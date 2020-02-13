@@ -29,12 +29,11 @@
                     style="@style/AppTheme.ButtonCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="8dp"
                     android:text="Cargar imágenes"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/price"
-                    app:layout_constraintTop_toBottomOf="@+id/price"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonsLayout"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <EditText
@@ -100,6 +99,16 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/loadImages" />
+
+                <LinearLayout
+                    android:id="@+id/buttonsLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="@+id/price"
+                    app:layout_constraintStart_toStartOf="@+id/price"
+                    app:layout_constraintTop_toBottomOf="@+id/price"></LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
