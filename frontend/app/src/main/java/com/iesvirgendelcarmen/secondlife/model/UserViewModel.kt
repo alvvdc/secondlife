@@ -10,6 +10,7 @@ import com.iesvirgendelcarmen.secondlife.model.api.product.ProductRepositoryVoll
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryDataSource
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryVolley
 
 class UserViewModel : ViewModel() {
 

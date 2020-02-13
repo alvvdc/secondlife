@@ -1,8 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.model.api.user
 
-import com.google.gson.JsonObject
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
 import com.iesvirgendelcarmen.secondlife.model.UserWithoutId

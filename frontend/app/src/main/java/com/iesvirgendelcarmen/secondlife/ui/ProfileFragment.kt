@@ -56,7 +56,6 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
         var type = 0
         var image = ""
-        var passwordSaved = ""
 
         userViewModel.getUser(userID, token)
 
@@ -93,14 +92,7 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
                         when (resource.status) {
                             Resource.Status.SUCCESS -> {
-                                sharedPreferences.edit()
-                                    .remove("userID")
-                                    .remove("token")
-                                    .apply()
-
-                                var activity = (activity as MainActivity)
-                                activity.changeHeaderData()
-                                activity.chargeProducts()
+                                (activity as MainActivity).logout()
                             }
                             Resource.Status.ERROR -> {
                                 Toast.makeText(context, "Error al borrar tu usuario", Toast.LENGTH_SHORT).show()
@@ -110,7 +102,7 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                 }
 
                 .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(android.R.drawable.stat_sys_warning)
                 .show()
         }
     }
@@ -140,6 +132,7 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
                             Toast.makeText(context,"Usuario actualizado con exito", Toast.LENGTH_SHORT).show()
+                            (activity as MainActivity).changeHeaderData()
                         }
                         Resource.Status.ERROR -> {
                             Toast.makeText(context,"Error al actualizar tu usuario", Toast.LENGTH_SHORT).show()

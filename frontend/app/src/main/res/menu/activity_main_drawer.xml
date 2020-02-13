@@ -4,6 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <item android:title="Cuenta">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/login"
+                    android:icon="@drawable/ic_action_goright"
+                    android:title="Iniciar sesión" />
+                <item
+                    android:id="@+id/perfil"
+                    android:icon="@drawable/ic_person_pin"
+                    android:title="Perfil" />
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/ic_exit_to_app"
+                    android:title="Cerrar sesión" />
+            </group>
+        </menu>
+    </item>
+
     <item android:title="Inicio">
         <menu>
             <group android:checkableBehavior="single">

@@ -4,23 +4,26 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.iesvirgendelcarmen.secondlife.R
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.*
+import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
+import androidx.lifecycle.ViewModelProviders
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -57,11 +60,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (savedInstanceState == null) chargeProducts()
 
         if (token == "null")
-            supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment()).commit()
+            showLogin()
+    }
+
+    private fun showLogin() {
+        supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment())
+            .commit()
     }
 
     fun chargeProducts() {
-            supportFragmentManager.beginTransaction().add(
+            supportFragmentManager.beginTransaction().replace(
                 R.id.container,
                 listProductsFragment,
                 "listProductFragment"
@@ -103,16 +111,52 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    fun logout(){
+        sharedPreferences.edit()
+            .remove("userID")
+            .remove("token")
+            .apply()
+        changeHeaderData()
+        chargeProducts()
+    }
+
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
+    }
+
     fun changeHeaderData() {
         var navigationView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
         var editUser = navigationView.findViewById<ImageButton>(R.id.editUser)
         var nameLastName = navigationView.findViewById<TextView>(R.id.nameLastName)
         var email = navigationView.findViewById<TextView>(R.id.email)
+        var menu: Menu = findViewById<NavigationView>(R.id.nav_view).menu
+        var profileButton = menu.findItem(R.id.perfil)
+        var loginButton = menu.findItem(R.id.login)
+        var logoutButton = menu.findItem(R.id.logout)
 
         token = sharedPreferences.getString("token", "null")!!
         userID = sharedPreferences.getString("userID", "null")!!
 
         if (token != "null") {
+
+            loginButton.isVisible = false
+            logoutButton.isVisible = true
+            profileButton.isVisible = true
+
+   /*         userViewModel.getUser(userID, token)
+
+            userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { resource ->
+
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+
+                    }
+                    Resource.Status.ERROR -> {
+
+                    }
+                }
+            })*/
+
             UserRepositoryRetrofit.getUser(userID, token,
                 object : UserRepositoryCallback.UserCallback {
                     override fun onError(message: String?) {
@@ -130,17 +174,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             nameLastName.text = "Invitado"
             email.text = ""
+
+            loginButton.isVisible = true
+            logoutButton.isVisible = false
+            profileButton.isVisible = false
         }
 
         editUser.setOnClickListener(View.OnClickListener {
             if (token != "null") {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ProfileFragment(sharedPreferences)).commit()
+                showProfile()
                 drawerLayout.closeDrawers()
             } else {
                 Toast.makeText(context, "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun showProfile() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, ProfileFragment(sharedPreferences)).commit()
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -167,6 +219,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.inicio -> {
                 listProductsFragment.listAllProducts()
+            }
+            R.id.login -> {
+                showLogin()
+            }
+            R.id.perfil -> {
+                showProfile()
+            }
+            R.id.logout -> {
+                logout()
             }
         }
         drawerLayout.closeDrawers()
