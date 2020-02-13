@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 const token = require('../model/token')
 const user = require('../model/user')
 
-function tokenAuth(req, res, next) {
+const tokenAuth = (req, res, next) => {
 
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), (err, decoded) => {
 
     if (err) res.json({ status: "error", message: err.message });
     else {
