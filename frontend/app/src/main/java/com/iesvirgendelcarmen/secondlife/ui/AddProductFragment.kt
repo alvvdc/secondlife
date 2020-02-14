@@ -22,6 +22,8 @@ import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import java.io.ByteArrayOutputStream
 import java.io.File
+import kotlin.math.roundToInt
+
 
 class AddProductFragment : Fragment(), View.OnLongClickListener {
 
@@ -87,7 +89,13 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
 
-            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
+            var bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
+
+            val aspectRatio :Float = bitmap.width.toFloat() / bitmap.height.toFloat()
+            val width = 480
+            val height = (width / aspectRatio)
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height.toInt(), false)
+
             val byteArrayOutputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, byteArrayOutputStream)
             val byteArray = byteArrayOutputStream.toByteArray()

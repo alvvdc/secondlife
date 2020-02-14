@@ -54,17 +54,18 @@ class DetailProductFragment(val product: Product, val productViewModel :ProductV
             bitmapsList.add(bitmap)
         }
 
+        var index = 0
+
         if (bitmapsList.size > 0) {
             setProductImage(bitmapsList[0])
-        }
 
-        var index = 0
-        productImage.setOnClickListener {
+            productImage.setOnClickListener {
 
-            if (index+1 < bitmapsList.size) index += 1
-            else index = 0
+                if (index+1 < bitmapsList.size) index += 1
+                else index = 0
 
-            setProductImage(bitmapsList[index])
+                setProductImage(bitmapsList[index])
+            }
         }
     }
 
