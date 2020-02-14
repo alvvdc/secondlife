@@ -1,22 +1,17 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
-import android.app.ActionBar
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.AttributeSet
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -28,7 +23,7 @@ import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-class AddProductFragment : Fragment() {
+class AddProductFragment : Fragment(), View.OnLongClickListener {
 
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -46,7 +41,7 @@ class AddProductFragment : Fragment() {
     private val IMAGE_REQUEST_CODE = 1
     private val IMAGE_QUALITY = 10 // 0 .. 100 %
 
-    private val loadedImages = mutableListOf<String>()
+    private val loadedImages = mutableMapOf<Button, String>()
 
     data class FormProduct (val title :String, val description :String, val price :String, val category :String)
 
@@ -71,8 +66,10 @@ class AddProductFragment : Fragment() {
 
             val formProduct = FormProduct(title, description, price, category)
 
+            val loadedImagesList = loadedImages.values.toMutableList()
+
             if (areFieldsFilled(formProduct)) {
-                productViewModel.insertNewProduct(Product("", "5e3517e17e13c20483c3750d", formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImages, Category.parse(formProduct.category)))
+                productViewModel.insertNewProduct(Product("", "5e3517e17e13c20483c3750d", formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
@@ -99,8 +96,9 @@ class AddProductFragment : Fragment() {
             val path = data?.data?.path
             val file = File(path)
             val filename = file.name
-            loadedImages.add(base64)
-            addButtonForImageAdded(filename)
+
+            val buttonAdded = addButtonForImageAdded(filename)
+            loadedImages[buttonAdded] = base64
         }
     }
 
@@ -115,8 +113,37 @@ class AddProductFragment : Fragment() {
         layoutParams.setMargins(0, 0, 0, 10)
         button.layoutParams = layoutParams
 
+        button.setOnClickListener { Toast.makeText(context, "Mantén pulsado el botón para borrar la imagen", Toast.LENGTH_SHORT).show() }
+
         buttonsLayout.addView(button)
+        button.setOnLongClickListener(this)
         return button
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+
+        fun removeImageFromForm() {
+            val iterator = loadedImages.entries.iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+
+                if (entry.key == v) {
+                    v.visibility = View.GONE
+                    iterator.remove()
+                }
+            }
+        }
+
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("Borrar imagen")
+        alertDialog.setMessage("¿Estás seguro de querer borrar la imagen?")
+        alertDialog.setPositiveButton("SI") { dialog, which ->
+
+            removeImageFromForm()
+        }
+        alertDialog.setNegativeButton("NO", null)
+        alertDialog.show()
+        return true
     }
 
     private fun areFieldsFilled(formProduct: FormProduct) :Boolean {
