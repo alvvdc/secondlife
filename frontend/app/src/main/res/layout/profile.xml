@@ -18,7 +18,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp">
+            android:layout_margin="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.25" />
+                    app:layout_constraintGuide_percent="0.22" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline6"
@@ -71,20 +71,33 @@
                     app:layout_constraintTop_toBottomOf="@+id/loadImage" />
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/name"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:ems="10"
                     android:hint="Nombre"
+                    android:inputType="textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
+                <EditText
+                    android:id="@+id/nickname"
+                    style="@style/AppTheme.EditTextCustom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:ems="10"
+                    android:hint="Usuario"
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/lastName1"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -94,10 +107,10 @@
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText" />
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
 
                 <EditText
-                    android:id="@+id/editText3"
+                    android:id="@+id/lastName2"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -107,23 +120,24 @@
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                    app:layout_constraintTop_toBottomOf="@+id/lastName1" />
 
                 <EditText
-                    android:id="@+id/editText4"
+                    android:id="@+id/email"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:editable="false"
                     android:ems="10"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText5" />
+                    app:layout_constraintTop_toBottomOf="@+id/phone" />
 
                 <EditText
-                    android:id="@+id/editText5"
+                    android:id="@+id/phone"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,23 +147,10 @@
                     android:inputType="phone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText3" />
+                    app:layout_constraintTop_toBottomOf="@+id/lastName2" />
 
                 <EditText
-                    android:id="@+id/editText6"
-                    style="@style/AppTheme.EditTextCustom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:ems="10"
-                    android:hint="Contraseña antigua"
-                    android:inputType="textPassword"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText4" />
-
-                <EditText
-                    android:id="@+id/editText7"
+                    android:id="@+id/password"
                     style="@style/AppTheme.EditTextCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -159,10 +160,23 @@
                     android:inputType="textPassword"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText6" />
+                    app:layout_constraintTop_toBottomOf="@+id/email" />
+
+                <EditText
+                    android:id="@+id/confirmPassword"
+                    style="@style/AppTheme.EditTextCustom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:ems="10"
+                    android:hint="Confirma la contraseña"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/password" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/save"
                     style="@style/AppTheme.ButtonCustom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -172,10 +186,10 @@
                     android:text="Guardar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText7" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirmPassword" />
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/deleteAccount"
                     style="@style/AppTheme.ButtonCustomWarn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -185,7 +199,7 @@
                     android:text="Borrar cuenta"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText7" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirmPassword" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

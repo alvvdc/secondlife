@@ -15,19 +15,15 @@ interface UserApi {
     fun getAllUsers() :Call<List<User>>
 
     @GET("${APIConfig.USER_ROUTE}/{id}")
-    fun getUser(@Path("id") id: Int): Call<User>
+    fun getUser(@Path("id") id: String,
+                @Header("x-access-token") tokenHeader: String
+    ): Call<User>
 
-    @FormUrlEncoded
     @PUT("${APIConfig.USER_ROUTE}/{id}")
-    fun editUser(@Path("id") id: Int,
-                 @Field("nickname") nickname: String,
-                 @Field("name") name: String,
-                 @Field("lastName1") lastName1: String,
-                 @Field("lastName2") lastName2: String,
-                 @Field("email") email: String,
-                 @Field("password") phone: String,
-                 @Field("type") type: Int
-                ): Call<User>
+    fun editUser(@Header("x-access-token") tokenHeader: String,
+                 @Path("id") id: String,
+                 @Body user: User
+    ): Call<User>
 
     @POST("register")
     fun register(@Body user: UserWithoutId): Call<User>
@@ -36,6 +32,8 @@ interface UserApi {
     fun login(@Body user: User): Call<Token>
 
     @DELETE("${APIConfig.USER_ROUTE}/{id}")
-    fun deleteUser(@Path("id")id: Int): Call<Void>
+    fun deleteUser(@Header("x-access-token") tokenHeader: String,
+                   @Path("id")id: String
+    ): Call<Void>
 
 }

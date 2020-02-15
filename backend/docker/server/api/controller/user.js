@@ -28,12 +28,12 @@ module.exports = {
 
     validate: (req, res) => {              
 
-        user.findOne({email: req.body.email}, (err, userGiven) => {
+        user.findOne({email: req.body.email}, (err, givenUser) => {
             if (err) res.status(500).json({error: 'Incorrect mail'})        
             
-            if (userGiven) {
-                if (bcrypt.compareSync(req.body.password, userGiven.password)){
-                    const tokenString = jwt.sign({_id: userGiven._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
+            if (givenUser) {
+                if (bcrypt.compareSync(req.body.password, givenUser.password)){
+                    const tokenString = jwt.sign({_id: givenUser._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
                     
                     const tokenCreated = {
                         token: tokenString,
@@ -47,7 +47,8 @@ module.exports = {
                     })
    
                     res.json({
-                        token: tokenString
+                        token: tokenString,
+                        userId: givenUser._id
                     })
 
                 } else 
@@ -59,11 +60,10 @@ module.exports = {
     },
 
     getById: (req, res) => {                   
-
-        user.findOne({_id: req.params.id}, (err, userGiven) => {
+        user.findOne({_id: req.params.id}, (err, givenUser) => {            
             if (err) return res.status(500).json({error: 'Incorrect user' + err})
-            if (!userGiven) return res.status(404).json({status: 'No user'}) 
-            res.status(200).json({userGiven})
+            if (!givenUser) return res.status(404).json({status: 'No user'}) 
+            res.status(200).json(givenUser)
         })
     },
 
@@ -78,7 +78,7 @@ module.exports = {
 
     update: (req, res) => {
         
-        user.findOneAndUpdate({_id: req.params.id}, req.body, (err, userGiven) => {
+        user.findOneAndUpdate({_id: req.params.id}, req.body, (err, givenUser) => {
             if (err) res.status(500).json({error: 'Error updating user'})
             else res.status(200).json({status: 'User updated'})
         })
@@ -87,11 +87,11 @@ module.exports = {
 
     delete: (req, res) => {
 
-        user.findOne({_id: req.params.id}, (err, userGiven) => {
+        user.findOne({_id: req.params.id}, (err, givenUser) => {
             if (err) return res.status(500).json({error: 'Incorrect user'})
 
-            if (userGiven) {
-                userGiven.remove(err => {
+            if (givenUser) {
+                givenUser.remove(err => {
                     if (err) return res.status(500).json({error: 'Error deleting user'})
                     res.status(200).json({status: 'User deleted'})
                 })

@@ -1,5 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.model.api.user
 
+import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
 
 interface UserRepositoryCallback {
@@ -16,8 +17,14 @@ interface UserRepositoryCallback {
         fun onLoading()
     }
 
+    interface DeleteCallback {
+        fun onResponse(message: String?)
+        fun onError(message: String?)
+        fun onLoading()
+    }
+
     interface TokenCallback {
-        fun onResponse(token: String)
+        fun onResponse(token: Token)
         fun onError(message: String?)
         fun onLoading()
     }

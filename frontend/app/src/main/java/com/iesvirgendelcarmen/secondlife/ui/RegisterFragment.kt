@@ -70,7 +70,8 @@ class RegisterFragment : Fragment() {
                     surname2.text.toString(),
                     email.text.toString(),
                     password1.text.toString(),
-                    phone.text.toString(),1
+                    phone.text.toString(),1,
+                    ""
                 )
 
                 UserRepositoryRetrofit.register(user, object : UserRepositoryCallback.UserCallback {
