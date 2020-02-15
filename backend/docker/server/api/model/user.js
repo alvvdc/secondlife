@@ -54,12 +54,19 @@ const userSchema = new Schema({
 
 }, {versionKey: false})
 
-userSchema.pre('save', next => {
+/*
+    No se puede utilizar arrow function de ES6:
+    https://teamtreehouse.com/community/presave-not-working
+
+    Utilizando arrow, la respuesta devuelve lo siguiente:
+    Server failture Error: data and salt arguments required (500)
+*/
+userSchema.pre('save', function(next) {
     this.password = bcrypt.hashSync(this.password, saltRounds);
     next();
 })
 
-userSchema.pre('findOneAndUpdate', next => {
+userSchema.pre('findOneAndUpdate', function(next) {
     if (this._update.password != "")
         this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
     else 
