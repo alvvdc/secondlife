@@ -81,12 +81,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ).commit()
     }
 
+    private fun onSubmitDetailProduct(): DetailProductFragment.SubmitDetailProduct {
+        return object : DetailProductFragment.SubmitDetailProduct {
+            override fun onClick(product :Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, EditProductFragment(product))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+    }
+
     private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
         return object : ProductRecyclerViewAdapter.ProductViewListener {
             override fun onClick(product: Product) {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product, productViewModel))
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel, onSubmitDetailProduct()))
                     .addToBackStack(null)
                     .commit()
             }
