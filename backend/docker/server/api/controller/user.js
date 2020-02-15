@@ -1,4 +1,5 @@
 const user = require('../model/user')
+const product = require('../model/product')
 const token = require('../model/token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -96,6 +97,19 @@ module.exports = {
                 })
             }
         } )
+    },
+
+    getUserProducts: (req, res) => {
+        
+        const userId = req.params.id
+        product.find({publisher : userId}, (err, doc) => {
+
+            if (err) {
+                return res.status(500).json(err)
+            } else {
+                res.status(200).json(doc)
+            }
+        })
     }
 
 }

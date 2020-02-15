@@ -10,5 +10,6 @@ router.get('/user', tokenAdmin, userController.getAll)
 router.get('/user/:id', tokenUserAuth, userController.getById)
 router.put('/user/:id', tokenUserAuth, userController.update)
 router.delete('/user/:id', tokenUserAuth, userController.delete)
+router.get('/user/:id/product', userController.getUserProducts)
 
 module.exports = router

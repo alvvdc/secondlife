@@ -73,6 +73,22 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
         })
     }
 
+    override fun updateProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.updateProduct(product._id, product)
+
+        call.enqueue(object : Callback<Product> {
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                val responseProduct = response.body() ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS)
+                callback.onResponse(responseProduct)
+            }
+
+        })
+    }
+
     override fun visitProduct(productId: String, callback: ProductRepositoryCallback.VisitProduct) {
         val call = api.visitProduct(productId)
 
@@ -84,30 +100,6 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
             override fun onResponse(call: Call<ProductVisits>, response: Response<ProductVisits>) {
                 val responseProductVisits = response.body() ?: ProductVisits("", -1)
                 callback.onResponse(responseProductVisits)
-            }
-
-        })
-    }
-
-    override fun editProduct(product: Product, callback: ProductRepositoryCallback.EditProduct) {
-        callback.onLoading()
-
-        val call = api.editProduct(
-            product._id,
-            product.publisher,
-            product.title,
-            product.description,
-            product.price,
-            product.images
-        )
-
-        call.enqueue(object : Callback<Product>{
-            override fun onFailure(call: Call<Product>, t: Throwable) {
-                callback.onError(t.message.toString())
-            }
-
-            override fun onResponse(call: Call<Product>, response: Response<Product>) {
-                callback.onResponse(product)
             }
 
         })
