@@ -50,7 +50,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (savedInstanceState == null) showProductsListFragment()
 
         if (!isThereTokenSaved())
-            supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment()).commit()
+            showLoginFragment()
+    }
+
+    private fun showLoginFragment() {
+        supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment())
+            .commit()
     }
 
     fun getSavedUserToken() :String {
@@ -102,7 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 else
                 {
-                    supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment()).commit()
+                    showLoginFragment()
                 }
             }
         }
@@ -183,6 +188,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.inicio -> {
                 listProductsFragment.listAllProducts()
+            }
+            R.id.misAnuncios -> {
+                val userId = getSavedUserId()
+
+                if (userId != "null") listProductsFragment.listProductsByUserId(userId)
+                else showLoginFragment()
             }
         }
         drawerLayout.closeDrawers()
