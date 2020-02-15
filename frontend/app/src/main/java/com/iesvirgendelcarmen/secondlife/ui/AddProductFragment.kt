@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import java.io.ByteArrayOutputStream
 import java.io.File
-import kotlin.math.roundToInt
 
 
 class AddProductFragment : Fragment(), View.OnLongClickListener {
@@ -42,8 +40,10 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
     private val NOT_SELECTED_CATEGORY = "Categoría"
     private val IMAGE_REQUEST_CODE = 1
     private val IMAGE_QUALITY = 10 // 0 .. 100 %
+    private val MAX_IMAGE_WIDTH_FOR_SCALE = 480
 
     private val loadedImages = mutableMapOf<Button, String>()
+    private var userId = ""
 
     data class FormProduct (val title :String, val description :String, val price :String, val category :String)
 
@@ -59,6 +59,25 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         findViewsById(view)
         loadSpinner(view)
 
+        val mainActivity = activity as MainActivity
+        if (mainActivity != null && mainActivity.isThereTokenSaved()) {
+
+            userId = mainActivity.getSavedUserId()
+            onSaveProduct()
+        }
+
+        onLoadImage()
+    }
+
+    private fun onLoadImage() {
+        loadImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, IMAGE_REQUEST_CODE)
+        }
+    }
+
+    private fun onSaveProduct() {
         save.setOnClickListener {
 
             val title = titleEditText.text.toString()
@@ -71,16 +90,10 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
             val loadedImagesList = loadedImages.values.toMutableList()
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.insertNewProduct(Product("", "5e3517e17e13c20483c3750d", formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
+                productViewModel.insertNewProduct(Product("", userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
-        }
-
-        loadImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, IMAGE_REQUEST_CODE)
         }
     }
 
@@ -90,17 +103,9 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
 
             var bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
+            bitmap = scaleBitmap(bitmap, MAX_IMAGE_WIDTH_FOR_SCALE)
 
-            val aspectRatio :Float = bitmap.width.toFloat() / bitmap.height.toFloat()
-            val width = 480
-            val height = (width / aspectRatio)
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height.toInt(), false)
-
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, byteArrayOutputStream)
-            val byteArray = byteArrayOutputStream.toByteArray()
-            val base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
-
+            val base64 = getBase64FromBitmap(bitmap)
             val path = data?.data?.path
             val file = File(path)
             val filename = file.name
@@ -108,6 +113,25 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
             val buttonAdded = addButtonForImageAdded(filename)
             loadedImages[buttonAdded] = base64
         }
+    }
+
+    private fun getBase64FromBitmap(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+    }
+
+    private fun scaleBitmap(bitmap: Bitmap, width :Int): Bitmap {
+        var scaledBitmap = bitmap
+
+        if (scaledBitmap.width > 480) {
+            val aspectRatio: Float = scaledBitmap.width.toFloat() / scaledBitmap.height.toFloat()
+            val height = (width / aspectRatio)
+            scaledBitmap = Bitmap.createScaledBitmap(scaledBitmap, width, height.toInt(), false)
+        }
+
+        return scaledBitmap
     }
 
     private fun addButtonForImageAdded(text :String) :Button {

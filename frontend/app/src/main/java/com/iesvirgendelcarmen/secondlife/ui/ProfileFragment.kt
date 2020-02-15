@@ -2,7 +2,6 @@ package com.iesvirgendelcarmen.secondlife.ui
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.iesvirgendelcarmen.secondlife.R
-import kotlin.math.log
 
 
 class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
@@ -98,7 +96,7 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
                                 var activity = (activity as MainActivity)
                                 activity.changeHeaderData()
-                                activity.chargeProducts()
+                                activity.showProductsListFragment()
                             }
 
                             override fun onError(message: String?) {
