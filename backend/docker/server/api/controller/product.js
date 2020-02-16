@@ -31,7 +31,7 @@ module.exports = {
         const filenames = writeImagesSync(req.body.images)
 
         const updateProduct = {
-            _id : req.body._id,
+            _id : req.params.id,
             publisher : new mongoose.Types.ObjectId(req.body.publisher),
             category : req.body.category,
             title : req.body.title,
