@@ -8,7 +8,7 @@
 	"password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha",
 	"phone":"658745874",
 	"type":1, 
-	"imagen":"https://www.lainformacion.com/files/article_default_content/uploads/2017/09/16/59bd7c2f6c1f7.jpeg"
+	"image":"test.jpeg"
 },
     {
 	"nickname": "admin",
@@ -19,7 +19,7 @@
 	"password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha",
 	"phone":"658745874",
 	"type":2, 
-	"imagen":"https://www.lainformacion.com/files/article_default_content/uploads/2017/09/16/59bd7c2f6c1f7.jpeg"
+	"image":"test.jpeg"
 }
 ]
 
