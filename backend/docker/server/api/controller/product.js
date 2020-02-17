@@ -28,7 +28,20 @@ module.exports = {
 
     updateProduct : (req, res) => {
 
-        product.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
+        const filenames = writeImagesSync(req.body.images)
+
+        const updateProduct = {
+            _id : req.body._id,
+            publisher : new mongoose.Types.ObjectId(req.body.publisher),
+            category : req.body.category,
+            title : req.body.title,
+            description : req.body.description,
+            price : req.body.price,
+            images : filenames,
+            isSold : req.body.isSold
+        }
+
+        product.findByIdAndUpdate(updateProduct._id, updateProduct, (err, result) => {
             if (err)
                 res.status(404).json({error : err})
             else   

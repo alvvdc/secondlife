@@ -17,6 +17,7 @@ import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.UserViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
+
 class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
     lateinit var nickname: EditText
@@ -90,9 +91,15 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
                     userViewModel.deleteLiveData.observe(viewLifecycleOwner, Observer { resource ->
 
+
                         when (resource.status) {
                             Resource.Status.SUCCESS -> {
                                 (activity as MainActivity).logout()
+
+                                var activity = (activity as MainActivity)
+                                activity.changeHeaderData()
+                                activity.showProductsListFragment()
+
                             }
                             Resource.Status.ERROR -> {
                                 Toast.makeText(context, "Error al borrar tu usuario", Toast.LENGTH_SHORT).show()

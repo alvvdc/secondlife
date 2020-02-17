@@ -80,6 +80,19 @@ class ProductViewModel : ViewModel() {
         })
     }
 
+    fun updateProduct(product: Product) {
+        productRepository.updateProduct(product, object : ProductRepositoryCallback.OneProduct {
+            override fun onResponse(product: Product) {
+                productLiveData.value = Resource.success(product)
+            }
+
+            override fun onError(message: String) {
+                productLiveData.value = Resource.error(message, Product("", "", "", "", 0f, mutableListOf(), Category.OTROS))
+            }
+
+        })
+    }
+
     fun visitProduct(productId :String) {
         productRepository.visitProduct(productId, object : ProductRepositoryCallback.VisitProduct {
             override fun onResponse(productVisits: ProductVisits) {

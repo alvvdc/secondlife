@@ -17,16 +17,9 @@ interface ProductApi {
     @POST(APIConfig.PRODUCT_ROUTE)
     fun postNewProduct(@Body product : ProductDto) :Call<Product>
 
+    @PUT("${APIConfig.PRODUCT_ROUTE}/{id}")
+    fun updateProduct(@Path("id") id :String, @Body product :Product) :Call<Product>
+
     @GET("${APIConfig.PRODUCT_ROUTE}/{id}/visit")
     fun visitProduct(@Path("id") productId :String) :Call<ProductVisits>
-
-    @FormUrlEncoded
-    @PUT("${APIConfig.PRODUCT_ROUTE}/{id}")
-    fun editProduct(@Path("id") id: String,
-                    @Field("publisher") publisher: String,
-                    @Field("title") title: String,
-                    @Field("description") description: String,
-                    @Field("price") price: Float,
-                    @Field("images") images: MutableList<String>) : Call<Product>
-
 }

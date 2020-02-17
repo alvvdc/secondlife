@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 
-class AddProductFragment : Fragment(), View.OnLongClickListener {
+class EditProductFragment(val product :Product) : Fragment(), View.OnLongClickListener {
 
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -39,7 +39,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
 
     private val NOT_SELECTED_CATEGORY = "Categoría"
     private val IMAGE_REQUEST_CODE = 1
-    private val IMAGE_QUALITY = 10 // 0 .. 100 %
+    private val IMAGE_QUALITY = 50 // 0 .. 100 %
     private val MAX_IMAGE_WIDTH_FOR_SCALE = 480
 
     private val loadedImages = mutableMapOf<Button, String>()
@@ -58,6 +58,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
 
         findViewsById(view)
         loadSpinner(view)
+        fillFieldsWithExistingData()
 
         val mainActivity = activity as MainActivity
         if (mainActivity != null && mainActivity.isThereTokenSaved()) {
@@ -90,7 +91,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
             val loadedImagesList = loadedImages.values.toMutableList()
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.insertNewProduct(Product("", userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
+                productViewModel.updateProduct(Product(product._id, userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
@@ -103,7 +104,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         if (resultCode == RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
 
             var bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
-            bitmap = scaleBitmap(bitmap, MAX_IMAGE_WIDTH_FOR_SCALE)
+            bitmap = getScaledBitmap(bitmap, MAX_IMAGE_WIDTH_FOR_SCALE)
 
             val base64 = getBase64FromBitmap(bitmap)
             val path = data?.data?.path
@@ -122,7 +123,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         return Base64.encodeToString(byteArray, Base64.NO_WRAP)
     }
 
-    private fun scaleBitmap(bitmap: Bitmap, width :Int): Bitmap {
+    private fun getScaledBitmap(bitmap: Bitmap, width :Int): Bitmap {
         var scaledBitmap = bitmap
 
         if (scaledBitmap.width > 480) {
@@ -192,6 +193,28 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         save = view.findViewById(R.id.save)
         loadImage = view.findViewById(R.id.loadImages)
         buttonsLayout = view.findViewById(R.id.buttonsLayout)
+    }
+
+    private fun fillFieldsWithExistingData() {
+        titleEditText.setText(product.title)
+        descriptionEditText.setText(product.description)
+        priceEditText.setText(product.price.toString())
+
+        for (i in 0 until Category.values().size) {
+
+            if (product.category.toString().toLowerCase() == Category.values()[i].toString().toLowerCase()) {
+                categorySpinner.setSelection(i+1)
+            }
+        }
+
+        var imageCount = 1
+        val productImages = product.images
+        for (image in productImages) {
+
+            val newButton = addButtonForImageAdded("Imagen $imageCount")
+            loadedImages[newButton] = image
+            imageCount++
+        }
     }
 
     private fun loadSpinner(view: View) {

@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 const token = require('../model/token')
 const user = require('../model/user')
 
@@ -6,7 +6,7 @@ const tokenAuth = (req, res, next) => {
 
   jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), (err, decoded) => {
 
-    if (err) res.json({ status: "error", message: err.message });
+    if (err) res.json({ status: 'error', message: err.message })
     else {
       token.findOne({ token: req.headers['x-access-token'] }, (err, tokenGiven) => {
 
@@ -18,7 +18,7 @@ const tokenAuth = (req, res, next) => {
 
             if (userGiven) {
               if (tokenGiven.email == userGiven.email) {
-                next();
+                next()
               }
               else res.status(404).json({ error: 'No tienes permisos' })
             }
@@ -29,7 +29,7 @@ const tokenAuth = (req, res, next) => {
         else res.status(404).json({ error: 'Token error' + err })
       })
     }
-  });
+  })
 
 
 }

@@ -20,7 +20,7 @@ import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class DetailProductFragment(val product: Product, val productViewModel :ProductViewModel) :Fragment() {
+class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct) :Fragment() {
 
     private lateinit var publisherImage :ImageView
     private lateinit var productImage :ImageView
@@ -54,17 +54,30 @@ class DetailProductFragment(val product: Product, val productViewModel :ProductV
             bitmapsList.add(bitmap)
         }
 
+        var index = 0
+
         if (bitmapsList.size > 0) {
             setProductImage(bitmapsList[0])
+
+            productImage.setOnClickListener {
+
+                if (index+1 < bitmapsList.size) index += 1
+                else index = 0
+
+                setProductImage(bitmapsList[index])
+            }
         }
 
-        var index = 0
-        productImage.setOnClickListener {
-
-            if (index+1 < bitmapsList.size) index += 1
-            else index = 0
-
-            setProductImage(bitmapsList[index])
+        val mainActivity = activity as MainActivity
+        val userId = mainActivity.getSavedUserId()
+        if (userId == product.publisher)
+        {
+            contactButton.text = "Editar"
+            contactButton.setOnClickListener { submitDetailProduct.onClick(product) }
+        }
+        else
+        {
+            // TODO: Fragmento para ver el perfil del autor del anuncio
         }
     }
 
@@ -94,5 +107,9 @@ class DetailProductFragment(val product: Product, val productViewModel :ProductV
         })
         
         productViewModel.visitProduct(product._id)
+    }
+
+    interface SubmitDetailProduct {
+        fun onClick(product :Product)
     }
 }

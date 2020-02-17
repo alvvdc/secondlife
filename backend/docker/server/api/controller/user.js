@@ -1,4 +1,5 @@
 const user = require('../model/user')
+const product = require('../model/product')
 const token = require('../model/token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -32,7 +33,7 @@ module.exports = {
             
             if (givenUser) {
                 if (bcrypt.compareSync(req.body.password, givenUser.password)){
-                    const tokenString = jwt.sign({_id: givenUser._id}, req.app.get('secretKey'), { expiresIn: '365d' });  
+                    const tokenString = jwt.sign({_id: givenUser._id}, req.app.get('secretKey'), { expiresIn: '365d' })
                     
                     const tokenCreated = {
                         token: tokenString,
@@ -42,7 +43,7 @@ module.exports = {
 
                     token.create(tokenCreated, (err) => {
                         if (err) 
-                            console.log('Token save failture ' + err);
+                            console.log('Token save failture ' + err)
                     })
    
                     res.json({
@@ -96,6 +97,19 @@ module.exports = {
                 })
             }
         } )
+    },
+
+    getUserProducts: (req, res) => {
+        
+        const userId = req.params.id
+        product.find({publisher : userId}, (err, doc) => {
+
+            if (err) {
+                return res.status(500).json(err)
+            } else {
+                res.status(200).json(doc)
+            }
+        })
     }
 
 }

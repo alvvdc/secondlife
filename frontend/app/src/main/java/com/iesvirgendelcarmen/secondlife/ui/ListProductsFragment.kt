@@ -114,6 +114,12 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
         productRecyclerViewAdapter.notifyDataSetChanged()
     }
 
+    fun listProductsByUserId(userId :String) {
+        val filteredProductList = lastProductsListObtained.filter { product -> product.publisher == userId }
+        productRecyclerViewAdapter.productsList = filteredProductList
+        productRecyclerViewAdapter.notifyDataSetChanged()
+    }
+
     fun listAllProducts() {
         //productViewModel.getUnsoldProducts()
 

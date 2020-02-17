@@ -1,6 +1,5 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -37,18 +36,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var toolbar: Toolbar
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var sharedPreferences: SharedPreferences
-    lateinit var userID: String
-    lateinit var token: String
-    lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        context = this
         sharedPreferences = getSharedPreferences(APIConfig.CONFIG_FILE,0)
-        token = sharedPreferences.getString("token", "null")!!
-        userID = sharedPreferences.getString("userID", "null")!!
+
         navigationDrawer()
         changeHeaderData()
 
@@ -57,23 +51,49 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback, productViewListener)
 
-        if (savedInstanceState == null) chargeProducts()
+        if (savedInstanceState == null) showProductsListFragment()
 
-        if (token == "null")
-            showLogin()
+        if (!isThereTokenSaved())
+            showLoginFragment()
     }
 
-    private fun showLogin() {
+    private fun showLoginFragment() {
         supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment())
             .commit()
     }
 
-    fun chargeProducts() {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.container,
-                listProductsFragment,
-                "listProductFragment"
-            ).commit()
+    fun getSavedUserToken() :String {
+        if (sharedPreferences != null)
+            return sharedPreferences.getString("token", "null").toString()
+        return "null"
+    }
+
+    fun getSavedUserId() :String {
+        if (sharedPreferences != null)
+            return sharedPreferences.getString("userID", "null").toString()
+        return "null"
+    }
+
+    fun isThereTokenSaved() = getSavedUserToken() != "null"
+
+    fun showProductsListFragment() {
+        supportFragmentManager.beginTransaction().add(
+            R.id.container,
+            listProductsFragment,
+            "listProductFragment"
+        ).commit()
+    }
+
+    private fun onSubmitDetailProduct(): DetailProductFragment.SubmitDetailProduct {
+        return object : DetailProductFragment.SubmitDetailProduct {
+            override fun onClick(product :Product) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, EditProductFragment(product))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
@@ -81,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onClick(product: Product) {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product, productViewModel))
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel, onSubmitDetailProduct()))
                     .addToBackStack(null)
                     .commit()
             }
@@ -91,11 +111,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun onClickedFapListener(): FragmentManager.FAP {
         return object : FragmentManager.FAP {
             override fun onClick() {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, AddProductFragment())
-                    .addToBackStack(null)
-                    .commit()
+
+                if (isThereTokenSaved())
+                {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, AddProductFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+                else
+                {
+                    showLoginFragment()
+                }
             }
         }
     }
@@ -117,7 +145,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .remove("token")
             .apply()
         changeHeaderData()
-        chargeProducts()
+        showProductsListFragment()
     }
 
     private val userViewModel: UserViewModel by lazy {
@@ -134,8 +162,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var loginButton = menu.findItem(R.id.login)
         var logoutButton = menu.findItem(R.id.logout)
 
-        token = sharedPreferences.getString("token", "null")!!
-        userID = sharedPreferences.getString("userID", "null")!!
+        val token = getSavedUserToken()
+        val userID = getSavedUserId()
 
         if (token != "null") {
 
@@ -143,24 +171,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             logoutButton.isVisible = true
             profileButton.isVisible = true
 
-   /*         userViewModel.getUser(userID, token)
-
-            userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { resource ->
-
-                when (resource.status) {
-                    Resource.Status.SUCCESS -> {
-
-                    }
-                    Resource.Status.ERROR -> {
-
-                    }
-                }
-            })*/
-
             UserRepositoryRetrofit.getUser(userID, token,
                 object : UserRepositoryCallback.UserCallback {
                     override fun onError(message: String?) {
-                        Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onLoading() {
@@ -185,7 +199,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 showProfile()
                 drawerLayout.closeDrawers()
             } else {
-                Toast.makeText(context, "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -221,13 +235,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 listProductsFragment.listAllProducts()
             }
             R.id.login -> {
-                showLogin()
+                showLoginFragment()
             }
             R.id.perfil -> {
                 showProfile()
             }
             R.id.logout -> {
                 logout()
+            }
+            R.id.misAnuncios -> {
+                val userId = getSavedUserId()
+
+                if (userId != "null") listProductsFragment.listProductsByUserId(userId)
+                else showLoginFragment()
             }
         }
         drawerLayout.closeDrawers()
