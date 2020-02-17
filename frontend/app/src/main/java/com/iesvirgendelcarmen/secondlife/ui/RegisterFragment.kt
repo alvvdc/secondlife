@@ -1,7 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.iesvirgendelcarmen.secondlife.R
-import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserViewModel
 import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
+import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
 
 class RegisterFragment : Fragment() {
@@ -33,6 +32,10 @@ class RegisterFragment : Fragment() {
         return inflater.inflate(R.layout.register, container, false)
     }
 
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,13 +51,8 @@ class RegisterFragment : Fragment() {
         val register = view.findViewById<Button>(R.id.register)
         val close = view.findViewById<ImageButton>(R.id.close)
 
-        close.setOnClickListener(View.OnClickListener {
-            exit()
-        })
-
-        register.setOnClickListener(View.OnClickListener {
-            register()
-        })
+        close.setOnClickListener { exit() }
+        register.setOnClickListener { register() }
     }
 
     private fun register() {
@@ -74,19 +72,20 @@ class RegisterFragment : Fragment() {
                     ""
                 )
 
-                UserRepositoryRetrofit.register(user, object : UserRepositoryCallback.UserCallback {
-                    override fun onResponse(user: User) {
-                        Toast.makeText(context,"Registrado correctamente, inicia sesión", Toast.LENGTH_SHORT).show()
-                        exit()
+                userViewModel.register(user)
+
+                userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { resource ->
+                    when (resource.status) {
+                        Resource.Status.SUCCESS -> {
+                            Toast.makeText(context,"Registrado correctamente, inicia sesión", Toast.LENGTH_SHORT).show()
+                            exit()
+                        }
+                        Resource.Status.ERROR -> {
+                            Toast.makeText(context,"Error de conexion al registrarte", Toast.LENGTH_SHORT).show()
+                        }
                     }
-
-                    override fun onError(message: String?) {
-                        Toast.makeText(context,"Error de conexion al registrarte", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onLoading() {}
-
                 })
+
             } else {
                 Toast.makeText(context, "La contraseña no es correcta", Toast.LENGTH_SHORT).show()
             }

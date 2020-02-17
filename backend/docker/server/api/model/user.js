@@ -62,17 +62,16 @@ const userSchema = new Schema({
     Server failture Error: data and salt arguments required (500)
 */
 userSchema.pre('save', function(next) {
-    this.password = bcrypt.hashSync(this.password, saltRounds);
-    next();
+    this.password = bcrypt.hashSync(this.password, saltRounds)
+    next()
 })
 
 userSchema.pre('findOneAndUpdate', function(next) {
-    if (this._update.password != "")
-        this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
+    if (this._update.password != '')
+        this._update.password = bcrypt.hashSync(this._update.password, saltRounds)
     else 
          delete this._update.password
-
-    next();
+    next()
 })
 
 module.exports = mongoose.model('User', userSchema)

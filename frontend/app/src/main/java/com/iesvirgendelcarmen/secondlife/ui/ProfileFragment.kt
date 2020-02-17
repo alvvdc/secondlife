@@ -9,13 +9,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-
 import com.iesvirgendelcarmen.secondlife.model.User
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
-import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.iesvirgendelcarmen.secondlife.R
+import com.iesvirgendelcarmen.secondlife.model.UserViewModel
+import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
 
 class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
@@ -31,6 +31,10 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.profile, container, false)
+    }
+
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,76 +57,64 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
         var type = 0
         var image = ""
-        var passwordSaved = ""
 
-        UserRepositoryRetrofit.getUser(userID, token, object: UserRepositoryCallback.UserCallback{
-            override fun onError(message: String?) {
-                Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
-            }
+        userViewModel.getUser(userID, token)
 
-            override fun onLoading() {
-            }
+        userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { resource ->
 
-            override fun onResponse(user: User) {
-                nickname.setText(user.nickname)
-                name.setText(user.name)
-                lastName1.setText(user.lastName1)
-                lastName2.setText(user.lastName2)
-                phone.setText(user.phone)
-                email.setText(user.email)
-                type = user.type
-                passwordSaved = user.password
+            when (resource.status) {
+                Resource.Status.SUCCESS -> {
+                    nickname.setText(resource.data.nickname)
+                    name.setText(resource.data.name)
+                    lastName1.setText(resource.data.lastName1)
+                    lastName2.setText(resource.data.lastName2)
+                    phone.setText(resource.data.phone)
+                    email.setText(resource.data.email)
+                    type = resource.data.type
+                }
+                Resource.Status.ERROR -> {
+                    Toast.makeText(context, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
+                }
             }
         })
 
-        saveButton.setOnClickListener(View.OnClickListener {
-            saveUser(passwordSaved, userID, type, image, token)
-        })
+        saveButton.setOnClickListener { saveUser(userID, type, image, token) }
 
-        deleteAccountButton.setOnClickListener(View.OnClickListener {
+        deleteAccountButton.setOnClickListener {
             AlertDialog.Builder(context!!)
                 .setTitle("Borrar cuenta")
                 .setMessage("Se va a borrar tu cuenta y tus datos permanentemente, no la podrás volver a recuperar, ¿Deseas continuar?")
-                .setPositiveButton(android.R.string.yes,
-                    DialogInterface.OnClickListener { dialog, which ->
+                .setPositiveButton(android.R.string.yes
+                ) { dialog, which ->
 
-                        UserRepositoryRetrofit.deleteUser(userID, token, object:UserRepositoryCallback.DeleteCallback{
-                            override fun onResponse(message: String?) {
+                    userViewModel.deleteUser(userID, token)
 
-                                sharedPreferences.edit()
-                                    .remove("userID")
-                                    .remove("token")
-                                    .apply()
+                    userViewModel.deleteLiveData.observe(viewLifecycleOwner, Observer { resource ->
+
+
+                        when (resource.status) {
+                            Resource.Status.SUCCESS -> {
+                                (activity as MainActivity).logout()
 
                                 var activity = (activity as MainActivity)
                                 activity.changeHeaderData()
                                 activity.showProductsListFragment()
-                            }
 
-                            override fun onError(message: String?) {
+                            }
+                            Resource.Status.ERROR -> {
                                 Toast.makeText(context, "Error al borrar tu usuario", Toast.LENGTH_SHORT).show()
                             }
-
-                            override fun onLoading() {
-                            }
-                        })
-
+                        }
                     })
+                }
 
                 .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(android.R.drawable.stat_sys_warning)
                 .show()
-        })
-
+        }
     }
 
-    private fun saveUser(
-        passwordSaved: String,
-        userID: String,
-        type: Int,
-        image: String,
-        token: String
-    ) {
+    private fun saveUser(userID: String, type: Int, image: String, token: String) {
 
         if (checkPassword()) {
 
@@ -141,44 +133,25 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                     image
                 )
 
-                UserRepositoryRetrofit.editUser(
-                    user,
-                    token,
-                    object : UserRepositoryCallback.UserCallback {
-                        override fun onResponse(user: User) {
-                            Toast.makeText(
-                                context,
-                                "Usuario actualizado con exito",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                userViewModel.editUser(user, token)
 
-                        override fun onError(message: String?) {
-                            Toast.makeText(
-                                context,
-                                "Error al actualizar tu usuario",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                userViewModel.userLiveData.observe(viewLifecycleOwner, Observer { resource ->
+                    when (resource.status) {
+                        Resource.Status.SUCCESS -> {
+                            Toast.makeText(context,"Usuario actualizado con exito", Toast.LENGTH_SHORT).show()
+                            (activity as MainActivity).changeHeaderData()
                         }
-
-                        override fun onLoading() {
+                        Resource.Status.ERROR -> {
+                            Toast.makeText(context,"Error al actualizar tu usuario", Toast.LENGTH_SHORT).show()
                         }
-
-                    })
+                    }
+                })
 
             } else {
-                Toast.makeText(
-                    context,
-                    "Debes de completar todos los campos obligatorios",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context,"Debes de completar todos los campos obligatorios", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(
-                context,
-                "Comprueba la confirmación de la contraseña",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(context,"Comprueba la confirmación de la contraseña", Toast.LENGTH_SHORT).show()
         }
     }
 

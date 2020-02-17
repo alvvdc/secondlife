@@ -1,10 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,23 +9,22 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
-import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryDataSource
-import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
-
-
-
-
+import com.iesvirgendelcarmen.secondlife.model.UserViewModel
+import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
 class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.login, container, false)
+    }
+
+    private val userViewModel: UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,42 +37,37 @@ class LoginFragment : Fragment() {
         var email = view.findViewById<EditText>(R.id.email)
         var password = view.findViewById<EditText>(R.id.password)
 
-        close.setOnClickListener(View.OnClickListener {
-            exit()
-        })
+        close.setOnClickListener { exit() }
 
-        login.setOnClickListener(View.OnClickListener {
-            loginUser(email, password)
-        })
+        login.setOnClickListener { loginUser(email, password) }
 
-        register.setOnClickListener(View.OnClickListener {
+        register.setOnClickListener {
             fragmentManager!!
                 .beginTransaction()
                 .add(android.R.id.content, RegisterFragment())
                 .commit()
-        })
+        }
     }
 
     private fun loginUser(email: EditText, password: EditText) {
-        val user =
-            User("", "", "", "", "", email.text.toString(), password.text.toString(), "", 9, "")
-        UserRepositoryRetrofit.login(user, object : UserRepositoryCallback.TokenCallback {
-            override fun onResponse(token: Token) {
 
-                var sharedPreferences = context!!.getSharedPreferences(APIConfig.CONFIG_FILE, 0)
-                sharedPreferences.edit()
-                    .putString("token", token.token)
-                    .putString("userID", token.userId)
-                    .apply()
-                (activity as MainActivity).changeHeaderData()
-                exit()
-            }
+        val user = User("", "", "", "", "", email.text.toString(), password.text.toString(), "", 9, "")
+        userViewModel.login(user)
 
-            override fun onError(message: String?) {
-                Toast.makeText(context, "Usuario o contraseña incorrecta", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onLoading() {
+        userViewModel.tokenLiveData.observe(viewLifecycleOwner, Observer { resource ->
+            when (resource.status) {
+                Resource.Status.SUCCESS -> {
+                    var sharedPreferences = context!!.getSharedPreferences(APIConfig.CONFIG_FILE, 0)
+                    sharedPreferences.edit()
+                        .putString("token", resource.data.token)
+                        .putString("userID", resource.data.userId)
+                        .apply()
+                    (activity as MainActivity).changeHeaderData()
+                    exit()
+                }
+                Resource.Status.ERROR -> {
+                    Toast.makeText(context, "Usuario o contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                }
             }
         })
     }
