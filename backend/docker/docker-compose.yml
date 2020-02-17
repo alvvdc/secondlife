@@ -5,7 +5,7 @@ services:
         image: mongo
         container_name: mongoSecondLife
         ports:
-        - "8081:8081"
+        - "8082:8082"
         networks:
             dev:
                 ipv4_address: 10.107.0.20
@@ -20,6 +20,18 @@ services:
         depends_on:
             - mongo
 
+    mongoexpress:
+        image: mongo-express
+        container_name: mongoExpressSecondLife
+        ports:
+        - "8081:8081"
+        depends_on:
+            - mongo
+            - mongo_seed
+        networks:
+            dev:
+                ipv4_address: 10.107.0.21
+
     node:
         container_name: nodeSecondLife
         build: 
@@ -30,9 +42,11 @@ services:
             - "7707:7707"
         networks:
             dev:
-                ipv4_address: 10.107.0.21
+                ipv4_address: 10.107.0.22
         depends_on:
             - mongo
+
+            
                 
 networks:
     dev:
