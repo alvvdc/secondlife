@@ -80,7 +80,7 @@ module.exports = {
         
         user.findOneAndUpdate({_id: req.params.id}, req.body, (err, givenUser) => {
             if (err) res.status(500).json({error: 'Error updating user'})
-            else res.status(200).json({status: 'User updated'})
+            else res.status(200).json(givenUser)
         })
 
     },
@@ -93,7 +93,7 @@ module.exports = {
             if (givenUser) {
                 givenUser.remove(err => {
                     if (err) return res.status(500).json({error: 'Error deleting user'})
-                    res.status(200).json({status: 'User deleted'})
+                    res.status(200).json('User deleted')
                 })
             }
         } )

@@ -77,11 +77,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun isThereTokenSaved() = getSavedUserToken() != "null"
 
     fun showProductsListFragment() {
-        supportFragmentManager.beginTransaction().add(
+        supportFragmentManager.beginTransaction().replace(
             R.id.container,
             listProductsFragment,
             "listProductFragment"
         ).commit()
+
     }
 
     private fun onSubmitDetailProduct(): DetailProductFragment.SubmitDetailProduct {

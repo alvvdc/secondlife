@@ -26,7 +26,7 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         api = retrofit.create(UserApi::class.java)
     }
 
-    override fun getAllUsers(callback: UserRepositoryCallback.UsersCallback) {
+    override fun getAllUsers(token: String, callback: UserRepositoryCallback.UsersCallback) {
 
         val call = api.getAllUsers()
         call.enqueue(object : Callback<List<User>>{

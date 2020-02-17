@@ -22,10 +22,10 @@ class UserViewModel : ViewModel() {
     val voidUser = User("", "", "", "", "", "", "", "", 1, "")
     val voidToken = Token("", "")
 
-    private val userRepository : UserRepositoryDataSource = UserRepositoryRetrofit
+    private val userRepository : UserRepositoryDataSource = UserRepositoryVolley
 
-    fun getAllUsers(){
-        userRepository.getAllUsers(object: UserRepositoryCallback.UsersCallback{
+    fun getAllUsers(token: String){
+        userRepository.getAllUsers(token, object: UserRepositoryCallback.UsersCallback{
             override fun onResponse(users: List<User>) {
                 userListLiveData.value = Resource.success(users)
             }

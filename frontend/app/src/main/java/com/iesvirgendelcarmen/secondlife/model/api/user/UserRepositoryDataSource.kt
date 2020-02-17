@@ -6,7 +6,7 @@ import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import retrofit2.Call
 
 interface UserRepositoryDataSource {
-    fun getAllUsers(callback : UserRepositoryCallback.UsersCallback)
+    fun getAllUsers(token: String, callback : UserRepositoryCallback.UsersCallback)
     fun getUser(id: String, token: String, callback: UserRepositoryCallback.UserCallback)
     fun editUser(user: User, token: String, callback: UserRepositoryCallback.UserCallback)
     fun register(user: UserWithoutId, callback: UserRepositoryCallback.UserCallback)
