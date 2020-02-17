@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun showLoginFragment() {
-        supportFragmentManager.beginTransaction().add(android.R.id.content, LoginFragment())
+        supportFragmentManager.beginTransaction().replace(android.R.id.content, LoginFragment())
             .commit()
     }
 
@@ -228,7 +228,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 
-        supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment).commit()
+        if (supportFragmentManager.findFragmentByTag("listProductFragment") == null)
+            supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment).commit()
 
         when (menuItem.itemId) {
 
