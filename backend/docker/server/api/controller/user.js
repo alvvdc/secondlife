@@ -3,6 +3,7 @@ const product = require('../model/product')
 const token = require('../model/token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const images = require('./images')
 
 module.exports = {
 
@@ -16,7 +17,8 @@ module.exports = {
             email: req.body.email,
             password: req.body.password,
             phone: req.body.phone,
-            type: req.body.type
+            type: req.body.type,
+            image: "default.png"
         }
         user.create(newUser, (err, result) => {
             if (err) 
@@ -63,7 +65,7 @@ module.exports = {
         user.findOne({_id: req.params.id}, (err, givenUser) => {            
             if (err) return res.status(500).json({error: 'Incorrect user' + err})
             if (!givenUser) return res.status(404).json({status: 'No user'}) 
-            res.status(200).json(givenUser)
+            res.status(200).json(convertImageToBase64(givenUser))
         })
     },
 
@@ -78,9 +80,12 @@ module.exports = {
 
     update: (req, res) => {
         
-        user.findOneAndUpdate({_id: req.params.id}, req.body, (err, givenUser) => {
+        const userEdit = req.body
+        userEdit.image = images.writeUserImageSync(req.body.image)
+
+        user.findOneAndUpdate({_id: req.params.id}, userEdit, (err, givenUser) => {
             if (err) res.status(500).json({error: 'Error updating user'})
-            else res.status(200).json(givenUser)
+            else res.status(200).json(convertImageToBase64(givenUser))
         })
 
     },
@@ -112,4 +117,10 @@ module.exports = {
         })
     }
 
+}
+
+const convertImageToBase64 = (user) => {
+    const newUser = user
+    newUser.image = images.readUserImageSync(user.image)
+    return newUser
 }

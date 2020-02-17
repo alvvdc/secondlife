@@ -1,12 +1,15 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.content.SharedPreferences
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,6 +26,7 @@ import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryCallback
 import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -163,6 +167,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var loginButton = menu.findItem(R.id.login)
         var logoutButton = menu.findItem(R.id.logout)
 
+        var image = navigationView.findViewById<ImageView>(R.id.image)
+
         val token = getSavedUserToken()
         val userID = getSavedUserId()
 
@@ -184,12 +190,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     override fun onResponse(user: User) {
                         nameLastName.text = "${user.name} ${user.lastName1} ${user.lastName2}"
                         email.text = user.email
+
+                        val decoded = Base64.decode(user.image, Base64.NO_WRAP)
+                        val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+
+                        Glide
+                            .with(image)
+                            .load(bitmap)
+                            .into(image)
+
+
                     }
                 })
         } else {
             nameLastName.text = "Invitado"
             email.text = ""
-
+            image.setImageResource(R.drawable.logo)
             loginButton.isVisible = true
             logoutButton.isVisible = false
             profileButton.isVisible = false
@@ -205,15 +221,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-    private fun showProfile() {
+    fun showProfile() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, ProfileFragment(sharedPreferences)).commit()
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
 
-        if (supportFragmentManager.findFragmentByTag("listProductFragment") == null)
-            supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment).commit()
 
         when (menuItem.itemId) {
 
