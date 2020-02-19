@@ -98,7 +98,14 @@ module.exports = {
             if (givenUser) {
                 givenUser.remove(err => {
                     if (err) return res.status(500).json({error: 'Error deleting user'})
-                    res.status(200).json('User deleted')
+                    
+                    product.deleteMany({publisher : req.params.id}, (err, result) => {
+                        if (err) {
+                            res.status(500).json({error: 'Error deleting user product'})
+                        } else {
+                            res.status(200).json('User deleted')
+                        }
+                    })
                 })
             }
         } )

@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun isThereTokenSaved() = getSavedUserToken() != "null"
 
     fun showProductsListFragment() {
+        changeToolbar(true, "")
         supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment,"listProductFragment").commit()
     }
 

@@ -3,8 +3,11 @@
     <item>
         <color android:color="@color/splashScreenBackground"/>
     </item>
-    <item>
+    <item
+        android:left="50dp"
+        android:right="50dp">
         <bitmap
+            android:scaleType="centerInside"
             android:src="@drawable/logo_splash"
             android:tileMode="disabled"
             android:gravity="center" />

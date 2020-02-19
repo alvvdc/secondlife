@@ -55,7 +55,7 @@
         <item name="srcCompat">@drawable/ic_add_button</item>
     </style>
 
-    <style name="SplashScreenTheme" parent="AppTheme.NoActionBar">
+    <style name="SplashScreenTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
