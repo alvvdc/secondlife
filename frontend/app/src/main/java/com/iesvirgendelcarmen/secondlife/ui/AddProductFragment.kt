@@ -56,6 +56,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).changeToolbar(false, "Nuevo producto")
         findViewsById(view)
         loadSpinner(view)
 

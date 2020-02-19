@@ -80,15 +80,13 @@ class RegisterFragment : Fragment() {
                             Toast.makeText(context,"Registrado correctamente, inicia sesión", Toast.LENGTH_SHORT).show()
                             exit()
                         }
-                        Resource.Status.ERROR -> {
+                        Resource.Status.ERROR ->
                             Toast.makeText(context,"Error de conexion al registrarte", Toast.LENGTH_SHORT).show()
-                        }
                     }
                 })
 
-            } else {
+            } else
                 Toast.makeText(context, "La contraseña no es correcta", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 

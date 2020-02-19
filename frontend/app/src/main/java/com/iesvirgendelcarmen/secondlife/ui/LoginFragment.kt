@@ -33,19 +33,14 @@ class LoginFragment : Fragment() {
         var login = view.findViewById<Button>(R.id.login)
         var register = view.findViewById<Button>(R.id.register)
         var close = view.findViewById<ImageButton>(R.id.close)
-
         var email = view.findViewById<EditText>(R.id.email)
         var password = view.findViewById<EditText>(R.id.password)
 
         close.setOnClickListener { exit() }
-
         login.setOnClickListener { loginUser(email, password) }
 
         register.setOnClickListener {
-            fragmentManager!!
-                .beginTransaction()
-                .add(android.R.id.content, RegisterFragment())
-                .commit()
+            fragmentManager!!.beginTransaction().add(android.R.id.content, RegisterFragment()).commit()
         }
     }
 
@@ -58,10 +53,7 @@ class LoginFragment : Fragment() {
             when (resource.status) {
                 Resource.Status.SUCCESS -> {
                     var sharedPreferences = context!!.getSharedPreferences(APIConfig.CONFIG_FILE, 0)
-                    sharedPreferences.edit()
-                        .putString("token", resource.data.token)
-                        .putString("userID", resource.data.userId)
-                        .apply()
+                    sharedPreferences.edit().putString("token", resource.data.token).putString("userID", resource.data.userId).apply()
                     (activity as MainActivity).changeHeaderData()
                     exit()
                 }

@@ -40,6 +40,7 @@ class DetailProductFragment(val product: Product, private val productViewModel :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).changeToolbar(false, product.title)
         findViewsById(view)
 
         productTitle.text = product.title
@@ -107,6 +108,11 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         })
         
         productViewModel.visitProduct(product._id)
+    }
+
+    override fun onDetach() {
+        (activity as MainActivity).changeToolbar(true, "")
+        super.onDetach()
     }
 
     interface SubmitDetailProduct {
