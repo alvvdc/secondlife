@@ -18,13 +18,13 @@ interface ProductApi {
     fun getUnsoldProductsByCategory(@Path("category") category :String) :Call<List<Product>>
 
     @POST(APIConfig.PRODUCT_ROUTE)
-    fun postNewProduct(@Body product : ProductDto) :Call<Product>
+    fun postNewProduct(@Body product : ProductDto, @Header("x-access-token") token :String) :Call<Product>
 
     @PUT("${APIConfig.PRODUCT_ROUTE}/{id}")
-    fun updateProduct(@Path("id") id :String, @Body product :Product) :Call<Product>
+    fun updateProduct(@Path("id") id :String, @Body product :Product, @Header("x-access-token") token :String) :Call<Product>
 
     @DELETE("${APIConfig.PRODUCT_ROUTE}/{id}")
-    fun deleteProductById(@Path("id") id :String) :Call<Product>
+    fun deleteProductById(@Path("id") id :String, @Header("x-access-token") token :String) :Call<Product>
 
     @GET("${APIConfig.PRODUCT_ROUTE}/{id}/visit")
     fun visitProduct(@Path("id") productId :String) :Call<ProductVisits>

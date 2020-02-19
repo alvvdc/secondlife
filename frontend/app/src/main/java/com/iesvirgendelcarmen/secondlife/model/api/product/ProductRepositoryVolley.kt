@@ -90,7 +90,7 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
-    override fun postNewProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+    override fun postNewProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
         VolleySingleton.getInstance().requestQueue
 
         val POST_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}"
@@ -98,8 +98,8 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         val json = Gson().toJson(product, Product::class.java)
         val jsonObject = JSONObject(json)
 
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.POST,
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Method.POST,
             POST_PRODUCT_URL,
             jsonObject,
 
@@ -109,12 +109,17 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
             },
             Response.ErrorListener {
                 callback.onError(it.toString())
-            })
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
+            }
+        }
 
         VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest)
     }
 
-    override fun updateProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+    override fun updateProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
         VolleySingleton.getInstance().requestQueue
 
         val PUT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
@@ -122,8 +127,8 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         val json = Gson().toJson(product, Product::class.java)
         val jsonObject = JSONObject(json)
 
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.PUT,
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Method.PUT,
             PUT_PRODUCT_URL,
             jsonObject,
 
@@ -133,18 +138,23 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
             },
             Response.ErrorListener { error ->
                 callback.onError(error.toString())
-            })
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
+            }
+        }
 
         VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest)
     }
 
-    override fun deleteProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+    override fun deleteProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
         VolleySingleton.getInstance().requestQueue
 
         val GET_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
 
-        val stringRequest = StringRequest (
-            Request.Method.DELETE,
+        val stringRequest = object : StringRequest (
+            Method.DELETE,
             GET_PRODUCT_URL,
             Listener { response ->
 
@@ -153,8 +163,12 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
             },
             Response.ErrorListener { error ->
                 callback.onError(error.message.toString())
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
             }
-        )
+        }
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 

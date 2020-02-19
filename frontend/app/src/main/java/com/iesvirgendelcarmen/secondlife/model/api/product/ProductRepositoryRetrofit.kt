@@ -72,8 +72,8 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
         })
     }
 
-    override fun postNewProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
-        val call = api.postNewProduct(ProductMapper.transformObjectBoToDto(product))
+    override fun postNewProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.postNewProduct(ProductMapper.transformObjectBoToDto(product), token)
 
         call.enqueue(object : Callback<Product> {
             override fun onFailure(call: Call<Product>, t: Throwable) {
@@ -88,8 +88,8 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
         })
     }
 
-    override fun updateProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
-        val call = api.updateProduct(product._id, product)
+    override fun updateProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.updateProduct(product._id, product, token)
 
         call.enqueue(object : Callback<Product> {
             override fun onFailure(call: Call<Product>, t: Throwable) {
@@ -104,8 +104,8 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
         })
     }
 
-    override fun deleteProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
-        val call = api.deleteProductById(product._id)
+    override fun deleteProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.deleteProductById(product._id, token)
 
         call.enqueue(object : Callback<Product> {
             override fun onFailure(call: Call<Product>, t: Throwable) {
