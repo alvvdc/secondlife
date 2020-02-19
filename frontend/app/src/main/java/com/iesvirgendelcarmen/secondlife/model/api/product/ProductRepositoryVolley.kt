@@ -13,10 +13,33 @@ import com.iesvirgendelcarmen.secondlife.model.api.VolleySingleton
 import java.nio.charset.Charset
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.NetworkResponse
-
+import com.android.volley.toolbox.JsonObjectRequest
+import com.iesvirgendelcarmen.secondlife.model.ProductVisits
+import org.json.JSONObject
 
 
 object ProductRepositoryVolley :ProductRepositoryDataSource {
+
+    override fun getProductById(id: String, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
+
+        val GET_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${id}"
+
+        val stringRequest = StringRequest (
+            Request.Method.GET,
+            GET_PRODUCT_URL,
+            Listener { response ->
+
+                val product = Gson().fromJson<Product>(response, Product::class.java)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
+    }
+
     override fun getUnsoldProducts(callback: ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
@@ -67,51 +90,105 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
-    override fun postNewProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
-        /*VolleySingleton.getInstance().requestQueue
+    override fun postNewProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
 
         val POST_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}"
 
-        val stringRequest = object : StringRequest (
-            Request.Method.POST,
+        val json = Gson().toJson(product, Product::class.java)
+        val jsonObject = JSONObject(json)
+
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Method.POST,
             POST_PRODUCT_URL,
+            jsonObject,
+
+            Listener<JSONObject> {
+                val product = Gson().fromJson(it.toString(), Product::class.java)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener {
+                callback.onError(it.toString())
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
+            }
+        }
+
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest)
+    }
+
+    override fun updateProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
+
+        val PUT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
+
+        val json = Gson().toJson(product, Product::class.java)
+        val jsonObject = JSONObject(json)
+
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Method.PUT,
+            PUT_PRODUCT_URL,
+            jsonObject,
+
+            Listener<JSONObject> { response ->
+                val product = Gson().fromJson(response.toString(), Product::class.java)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.toString())
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
+            }
+        }
+
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest)
+    }
+
+    override fun deleteProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
+
+        val GET_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
+
+        val stringRequest = object : StringRequest (
+            Method.DELETE,
+            GET_PRODUCT_URL,
             Listener { response ->
 
-                val product = Gson().fromJson(response, Product::class.java)
+                val product = Gson().fromJson<Product>(response, Product::class.java)
                 callback.onResponse(product)
             },
             Response.ErrorListener { error ->
                 callback.onError(error.message.toString())
-            }
-        ) {
-            override fun getPostBodyContentType(): String {
-                return "application/json; charset=utf-8"
-            }
+            }) {
 
-            override fun getBody(): ByteArray {
-                return Gson().toJson(product, Product::class.java).toByteArray(Charsets.UTF_8)
-            }
-
-            override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
-                var responseString = ""
-                if (response != null) {
-                    responseString = response.statusCode.toString()
-                }
-                return Response.success(
-                    responseString,
-                    HttpHeaderParser.parseCacheHeaders(response!!)
-                )
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
             }
         }
-
-        VolleySingleton.getInstance().addToRequestQueue(stringRequest)*/
-    }
-
-    override fun updateProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
-
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
     override fun visitProduct(productId: String, callback: ProductRepositoryCallback.VisitProduct) {
+        VolleySingleton.getInstance().requestQueue
 
+        val VISIT_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/$productId/visit"
+
+        val stringRequest = StringRequest (
+            Request.Method.GET,
+            VISIT_PRODUCT_URL,
+            Listener { response ->
+
+                val productVisits = Gson().fromJson(response, ProductVisits::class.java)
+                callback.onResponse(productVisits)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 }

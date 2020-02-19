@@ -31,7 +31,7 @@ module.exports = {
         const filenames = writeImagesSync(req.body.images)
 
         const updateProduct = {
-            _id : req.body._id,
+            _id : req.params.id,
             publisher : new mongoose.Types.ObjectId(req.body.publisher),
             category : req.body.category,
             title : req.body.title,
@@ -45,6 +45,17 @@ module.exports = {
             if (err)
                 res.status(404).json({error : err})
             else   
+                res.status(200).json(result)
+        })
+    },
+
+    getProductById : (req, res) => {
+        const id = req.params.id
+
+        product.findById(id, (err, result) => {
+            if (err)
+                res.status(404).json({error : err})
+            else
                 res.status(200).json(result)
         })
     },
@@ -68,6 +79,17 @@ module.exports = {
                 res.status(500).json({error : err})
             else
                 res.status(200).json(convertProductListImagesToBase64(result))
+        })
+    },
+
+    deleteProductById : (req, res) => {
+        const id = req.params.id
+
+        product.findOneAndDelete({_id : id}, (err, result) => {
+            if (err)
+            res.status(404).json({error : err})
+                else
+            res.status(200).json(result)
         })
     }
 }

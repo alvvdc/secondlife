@@ -91,11 +91,15 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
             val loadedImagesList = loadedImages.values.toMutableList()
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.insertNewProduct(Product("", userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
+                productViewModel.insertNewProduct(Product("", userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)), getUserToken())
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun getUserToken() :String {
+        return (activity as MainActivity).getSavedUserToken()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

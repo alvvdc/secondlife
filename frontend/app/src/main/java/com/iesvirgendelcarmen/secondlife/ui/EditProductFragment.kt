@@ -92,11 +92,15 @@ class EditProductFragment(val product :Product) : Fragment(), View.OnLongClickLi
             val loadedImagesList = loadedImages.values.toMutableList()
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.updateProduct(Product(product._id, userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)))
+                productViewModel.updateProduct(Product(product._id, userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)), getUserToken())
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun getUserToken() :String {
+        return (activity as MainActivity).getSavedUserToken()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

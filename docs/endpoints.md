@@ -2,7 +2,7 @@
 | -------------             | --------- | -----                                         | --------------- |
 | /api/product              | GET       |                                               | Obtiene todos los productos no vendidos de la base de datos |
 | /api/product              | POST      | Id de una categoría y JSON de un producto     | Inserta un producto en una categoría |
-| /api/product              | PUT       | JSON del producto                             | Actualiza el producto |
+| /api/product/:id          | PUT       | Id y JSON del producto                        | Actualiza el producto |
 | /api/product/:category    | GET       | Id de una categoría                           | Obtiene todos los productos no vendidos de una categoría |
 | /api/product/:id/visit    | GET       | Id de un producto                             | Suma una visita al producto y devuelve el total |
 | /api/user                 | POST      | JSON de un usuario                            | Inserta un usuario |

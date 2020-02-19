@@ -44,6 +44,7 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>, val productVie
             productTitle.text = product.title
             productDescription.text = product.description
             productPrice.text = "${product.price.toInt()}€"
+            productImage.setImageResource(R.mipmap.ic_launcher)
 
             if (product.images.size > 0) {
 

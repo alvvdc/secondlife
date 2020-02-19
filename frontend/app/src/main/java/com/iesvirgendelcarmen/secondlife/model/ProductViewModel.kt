@@ -7,32 +7,16 @@ import com.iesvirgendelcarmen.secondlife.model.api.product.ProductRepositoryCall
 import com.iesvirgendelcarmen.secondlife.model.api.product.ProductRepositoryDataSource
 import com.iesvirgendelcarmen.secondlife.model.api.product.ProductRepositoryRetrofit
 import com.iesvirgendelcarmen.secondlife.model.api.product.ProductRepositoryVolley
+import com.iesvirgendelcarmen.secondlife.ui.MainActivity
 
 class ProductViewModel : ViewModel() {
 
-    //val productsList = mutableListOf<Product>()
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
     val productLiveData = MutableLiveData<Resource<Product>>()
     val productVisitsLiveData = MutableLiveData<Resource<ProductVisits>>()
 
-    private val productRepository : ProductRepositoryDataSource = ProductRepositoryRetrofit
+    private val productRepository : ProductRepositoryDataSource = ProductRepositoryVolley
 
-    init {
-        //mock()
-    }
-
-    /*private fun mock() {
-        productsList.add(Product("1", "1","Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-        productsList.add(Product("1", "1", "Muchas camisetas", "Están nuevas a estrenar, no hago envios.", 20f, mutableListOf("https://i.imgur.com/0oPAfru.png")))
-        productsList.add(Product("1", "1", "Mueble rústico", "", 232f, mutableListOf("https://i.imgur.com/rWkb5AJ.png")))
-    }*/
 
     fun getUnsoldProducts() {
         productRepository.getUnsoldProducts(object : ProductRepositoryCallback.ListProducts {
@@ -67,8 +51,8 @@ class ProductViewModel : ViewModel() {
         })
     }
 
-    fun insertNewProduct(product: Product) {
-        productRepository.postNewProduct(product, object : ProductRepositoryCallback.OneProduct {
+    fun insertNewProduct(product: Product, token :String) {
+        productRepository.postNewProduct(product, token, object : ProductRepositoryCallback.OneProduct {
             override fun onResponse(product: Product) {
                 productLiveData.value = Resource.success(product)
             }
@@ -80,8 +64,8 @@ class ProductViewModel : ViewModel() {
         })
     }
 
-    fun updateProduct(product: Product) {
-        productRepository.updateProduct(product, object : ProductRepositoryCallback.OneProduct {
+    fun updateProduct(product: Product, token :String) {
+        productRepository.updateProduct(product, token, object : ProductRepositoryCallback.OneProduct {
             override fun onResponse(product: Product) {
                 productLiveData.value = Resource.success(product)
             }
