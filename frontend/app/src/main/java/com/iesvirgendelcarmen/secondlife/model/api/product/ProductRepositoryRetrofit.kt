@@ -23,6 +23,21 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
             ProductApi::class.java)
     }
 
+    override fun getProductById(id: String, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.getProductById(id)
+
+        call.enqueue(object : Callback<Product> {
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                val responseProduct = response.body() ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS)
+                callback.onResponse(responseProduct)
+            }
+        })
+    }
+
     override fun getUnsoldProducts(callback :ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
@@ -86,6 +101,21 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
                 callback.onResponse(responseProduct)
             }
 
+        })
+    }
+
+    override fun deleteProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+        val call = api.deleteProductById(product._id)
+
+        call.enqueue(object : Callback<Product> {
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                val responseProduct = response.body() ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS)
+                callback.onResponse(responseProduct)
+            }
         })
     }
 

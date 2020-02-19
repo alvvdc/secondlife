@@ -8,6 +8,9 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ProductApi {
+    @GET("${APIConfig.PRODUCT_ROUTE}/{id}")
+    fun getProductById(@Path("id") id :String) :Call<Product>
+
     @GET(APIConfig.PRODUCT_ROUTE)
     fun getUnsoldProducts() :Call<List<Product>>
 
@@ -19,6 +22,9 @@ interface ProductApi {
 
     @PUT("${APIConfig.PRODUCT_ROUTE}/{id}")
     fun updateProduct(@Path("id") id :String, @Body product :Product) :Call<Product>
+
+    @DELETE("${APIConfig.PRODUCT_ROUTE}/{id}")
+    fun deleteProductById(@Path("id") id :String) :Call<Product>
 
     @GET("${APIConfig.PRODUCT_ROUTE}/{id}/visit")
     fun visitProduct(@Path("id") productId :String) :Call<ProductVisits>

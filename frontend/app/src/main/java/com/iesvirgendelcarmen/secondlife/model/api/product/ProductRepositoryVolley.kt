@@ -19,6 +19,27 @@ import org.json.JSONObject
 
 
 object ProductRepositoryVolley :ProductRepositoryDataSource {
+
+    override fun getProductById(id: String, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
+
+        val GET_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${id}"
+
+        val stringRequest = StringRequest (
+            Request.Method.GET,
+            GET_PRODUCT_URL,
+            Listener { response ->
+
+                val product = Gson().fromJson<Product>(response, Product::class.java)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
+    }
+
     override fun getUnsoldProducts(callback: ProductRepositoryCallback.ListProducts) {
         callback.onLoading()
 
@@ -115,6 +136,26 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
             })
 
         VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest)
+    }
+
+    override fun deleteProduct(product: Product, callback: ProductRepositoryCallback.OneProduct) {
+        VolleySingleton.getInstance().requestQueue
+
+        val GET_PRODUCT_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/${product._id}"
+
+        val stringRequest = StringRequest (
+            Request.Method.DELETE,
+            GET_PRODUCT_URL,
+            Listener { response ->
+
+                val product = Gson().fromJson<Product>(response, Product::class.java)
+                callback.onResponse(product)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
     override fun visitProduct(productId: String, callback: ProductRepositoryCallback.VisitProduct) {

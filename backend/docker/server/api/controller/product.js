@@ -49,6 +49,17 @@ module.exports = {
         })
     },
 
+    getProductById : (req, res) => {
+        const id = req.params.id
+
+        product.findById(id, (err, result) => {
+            if (err)
+                res.status(404).json({error : err})
+            else
+                res.status(200).json(result)
+        })
+    },
+
     getUnsoldProducts : (req, res) => {
 
         product.find({isSold : false}, (err, result) => {
@@ -68,6 +79,17 @@ module.exports = {
                 res.status(500).json({error : err})
             else
                 res.status(200).json(convertProductListImagesToBase64(result))
+        })
+    },
+
+    deleteProductById : (req, res) => {
+        const id = req.params.id
+
+        product.findOneAndDelete({_id : id}, (err, result) => {
+            if (err)
+            res.status(404).json({error : err})
+                else
+            res.status(200).json(result)
         })
     }
 }
