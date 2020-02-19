@@ -56,6 +56,7 @@ class EditProductFragment(val product :Product) : Fragment(), View.OnLongClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).changeToolbar(false, "Editar producto")
         findViewsById(view)
         loadSpinner(view)
         fillFieldsWithExistingData()

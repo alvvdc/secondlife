@@ -5,11 +5,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.Image
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -123,6 +121,11 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
         }
     }
 
+    override fun onDetach() {
+        (activity as MainActivity).changeToolbar(true, "")
+        super.onDetach()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -174,7 +177,6 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
 
                 userViewModel.deleteLiveData.observe(viewLifecycleOwner, Observer { resource ->
 
-
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
                             (activity as MainActivity).logout()
@@ -182,14 +184,9 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                             var activity = (activity as MainActivity)
                             activity.changeHeaderData()
                             activity.showProductsListFragment()
-
                         }
                         Resource.Status.ERROR -> {
-                            Toast.makeText(
-                                context,
-                                "Error al borrar tu usuario",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(context,"Error al borrar tu usuario", Toast.LENGTH_SHORT).show()
                         }
                     }
                 })
