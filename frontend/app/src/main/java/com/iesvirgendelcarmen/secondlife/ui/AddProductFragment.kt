@@ -212,6 +212,11 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         categorySpinner.adapter = adapter
     }
 
+    override fun onDetach() {
+        (activity as MainActivity).changeToolbar(true, "")
+        super.onDetach()
+    }
+
     override fun onStart() {
         super.onStart()
 
