@@ -4,11 +4,22 @@
 	"name":"Alberto",
 	"lastName1":"Torres",
 	"lastName2":"Cruz",
-	"email":"albertodtres@gmail.com", 
+	"email":"alberto@secondlife.com", 
 	"password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha",
 	"phone":"658745874",
 	"type":1, 
-	"image":"test.jpeg"
+	"image":"alberto.png"
+},
+{
+	"nickname": "oravla", 
+	"name":"Álvaro",
+	"lastName1":"García",
+	"lastName2":"Muñoz",
+	"email":"alvaro@secondlife.com", 
+	"password":"$2b$10$HmeGO71fLnDaMtaKZA0pw.JS2MTY/7H2Fo.LNiZalCTJxNET1KCha",
+	"phone":"658745874",
+	"type":1, 
+	"image":"alvaro.png"
 },
     {
 	"nickname": "admin",

@@ -16,7 +16,7 @@ Nada más acceder a la aplicación podemos ver un bonito splash screen que apare
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/splash.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -33,7 +33,7 @@ Una vez visto el splash screen podremos ver la pantalla de inicio de sesión jun
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/login.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -64,7 +64,7 @@ En caso de que tengamos una cuenta iniciada sesión, nos saldrá en el "Navigati
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/sidebar.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -80,7 +80,7 @@ Si accedemos mediante el acceso directo de "Perfil" nos saldrá la siguiente pan
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/perfil.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -96,7 +96,7 @@ Seguimos en la misma pantalla, pero esta vez la hemos bajado un poco, ya que dis
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/perfil.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -112,11 +112,11 @@ Una vez tenemos usuarios nos falta algo con que interactuar, en este caso con pr
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/home.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
-        <td>
+        <td align="center">
             <img src="docs/Manual/listaProductosHome.png" width="200">
             <p>Resultado final</p>
         </td>
@@ -133,7 +133,7 @@ En la lista de productos nos hemos dado cuenta que tenemos un botón como hemos 
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/añadirProducto.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>
@@ -164,7 +164,7 @@ Seguramente queramos actualizar algún dato del producto que hemos publicado, po
 
 <table align="center">
     <tr>
-        <td>
+        <td align="right">
             <img src="docs/Vistas/editarProducto.png" width="185">
             <p>Idea incial con photoshop</p>
         </td>

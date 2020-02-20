@@ -96,7 +96,7 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
                     swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.ERROR -> {
-                    Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Comprueba tu conexión", Toast.LENGTH_LONG).show()
                     swipeRefreshLayout.isRefreshing = false
                 }
                 Resource.Status.LOADING -> {

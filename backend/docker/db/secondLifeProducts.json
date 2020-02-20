@@ -1,39 +1,48 @@
 [
 	{
-		"publisher": 11,
-		"category": "MOTOR",
-		"title": "Ferrari rojo",
-		"description": "Impecable, nunca circuito.",
-		"price": 120000.0,
-		"images": [],
+		"publisher": "5e4f0cb0ee3872b51ec9515a",
+		"category": "OTROS",
+		"title": "Raspberry Pi B+",
+		"description": "Viene con su caja, ventilador, disipadores y una micro sd",
+		"price": 20.0,
+		"images": ["raspberry.jpg"],
 		"isSold": false
 	},
 	{
 		"publisher": 12,
 		"category": "MOTOR",
-		"title": "Lamborghini naranja bitcoin",
-		"description": "Pura libertad,",
-		"price": 440000.0,
-		"images": [],
+		"title": "BMW 320d Año 2016",
+		"description": "Diesel, Automático, color Mineral Grey Metallic con 40.000 kilómetros",
+		"price": 13000.0,
+		"images": ["bmw.jpg"],
 		"isSold": false
 	},
 		
 	{
 		"publisher": 13,
 		"category": "INMOBILIARIA",
-		"title": "Chalet en Ibiza",
+		"title": "Chalet en Urbanización Monte Pinar",
 		"description": "400m², cerca de la costa.",
-		"price": 51000.0,
-		"images": [],
+		"price": 500000.0,
+		"images": ["casa.jpg"],
 		"isSold": false
 	},
 	{
 		"publisher": 14,
 		"category": "INMOBILIARIA",
-		"title": "Mansión en Panamá",
-		"description": "Pura libertad",
+		"title": "Piso en el centro de Sevilla",
+		"description": "Muy luminoso y de estilo moderno, está recien reformado",
 		"price": 350000.0,
-		"images": [],
+		"images": ["piso.jpg"],
+		"isSold": false
+	},
+	{
+		"publisher": 12,
+		"category": "SERVICIOS",
+		"title": "Gestionamos tus redes sociales",
+		"description": "Controlamos tus perfiles públicos empresariales, posicionamiento SEO, analytics y otros servicios",
+		"price": 40.0,
+		"images": ["despacho.jpg"],
 		"isSold": false
 	}
 ]
