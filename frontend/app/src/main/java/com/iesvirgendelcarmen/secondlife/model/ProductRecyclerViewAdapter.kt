@@ -2,7 +2,6 @@ package com.iesvirgendelcarmen.secondlife.model
 
 import android.graphics.BitmapFactory
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,7 +57,7 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>, val productVie
             }
 
             itemView.setOnClickListener {
-                productViewListener.onClick(product)
+                productViewListener.onClickProductListElement(product)
             }
         }
     }
@@ -88,6 +87,6 @@ class ProductRecyclerViewAdapter(var productsList :List<Product>, val productVie
     }
 
     interface ProductViewListener {
-        fun onClick(product: Product)
+        fun onClickProductListElement(product: Product)
     }
 }

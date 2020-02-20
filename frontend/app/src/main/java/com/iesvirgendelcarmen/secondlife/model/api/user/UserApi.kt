@@ -3,6 +3,7 @@ package com.iesvirgendelcarmen.secondlife.model.api.user
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserContact
 import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import retrofit2.Call
 import retrofit2.http.*
@@ -34,4 +35,6 @@ interface UserApi {
                    @Path("id")id: String
     ): Call<Void>
 
+    @GET("${APIConfig.USER_ROUTE}/{id}/contact")
+    fun getUserContact(@Path("id") id :String, @Header("x-access-token") tokenHeader :String) :Call<UserContact>
 }

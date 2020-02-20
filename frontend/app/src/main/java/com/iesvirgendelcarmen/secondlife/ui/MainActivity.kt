@@ -1,7 +1,9 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
@@ -25,7 +27,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity :    AppCompatActivity(),
+                        NavigationView.OnNavigationItemSelectedListener,
+                        DetailProductFragment.SubmitDetailProduct,
+                        DetailProductFragment.ContactUserButton,
+                        ListProductsFragment.AddProductFAP,
+                        ProductRecyclerViewAdapter.ProductViewListener {
 
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -46,11 +53,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationDrawer()
         changeHeaderData()
+        onSearchListener()
 
-        val productViewListener = onClickProductForDetail()
-        val fapCallback = onClickedFapListener()
-
-        listProductsFragment = ListProductsFragment(productViewModel, toolbar, fapCallback, productViewListener)
+        listProductsFragment = ListProductsFragment()
 
         if (savedInstanceState == null) showProductsListFragment()
         if (!isThereTokenSaved()) showLoginFragment()
@@ -79,39 +84,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment,"listProductFragment").commit()
     }
 
-    private fun onSubmitDetailProduct(): DetailProductFragment.SubmitDetailProduct {
-        return object : DetailProductFragment.SubmitDetailProduct {
-            override fun onClick(product :Product) {
-                supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.container, EditProductFragment(product))
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
+    override fun onClickProductListElement(product: Product) {
+        val bundle = Bundle()
+        bundle.putParcelable("PRODUCT", product)
+        val detailProductFragment = DetailProductFragment()
+        detailProductFragment.arguments = bundle
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, detailProductFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
-    private fun onClickProductForDetail(): ProductRecyclerViewAdapter.ProductViewListener {
-        return object : ProductRecyclerViewAdapter.ProductViewListener {
-            override fun onClick(product: Product) {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product, productViewModel, onSubmitDetailProduct()))
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
+    override fun onClickedEditProductButton(product: Product) {
+
+        val bundle = Bundle()
+        bundle.putParcelable("PRODUCT", product)
+
+        val editProductsFragment = EditProductFragment()
+        editProductsFragment.arguments = bundle
+
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.container, editProductsFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
-    private fun onClickedFapListener(): FragmentManager.FAP {
-        return object : FragmentManager.FAP {
-            override fun onClick() {
-                if (isThereTokenSaved())
-                    supportFragmentManager.beginTransaction().replace(R.id.container, AddProductFragment()).addToBackStack(null).commit()
-                else
-                    showLoginFragment()
-            }
-        }
+    override fun onClickContactUserButton(phone: String) {
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone"))
+        startActivity(intent)
+    }
+
+    override fun onClickedFapForAddProduct() {
+        if (isThereTokenSaved())
+            supportFragmentManager.beginTransaction().replace(R.id.container, AddProductFragment()).addToBackStack(null).commit()
+        else
+            showLoginFragment()
     }
 
     private fun navigationDrawer() {
@@ -242,9 +252,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    interface FragmentManager {
-        interface FAP {
-            fun onClick()
-        }
+    private fun onSearchListener() {
+        var busqueda: SearchView = toolbar.findViewById(R.id.busqueda)
+
+        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                listProductsFragment.listProductsBySearch(newText.toString())
+                return true
+            }
+
+        })
     }
+
+
 }

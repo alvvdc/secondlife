@@ -69,6 +69,28 @@ module.exports = {
         })
     },
 
+    getContactInfoById: (req, res) => {
+        const id = req.params.id
+
+        user.findOne({_id : id}, (err, response) => {
+            if (err)
+            {
+                console.log('error ' + err)
+                res.status(404).json({error : 'User not found'})
+            }
+            else
+            {
+                const userContact = {
+                    name : response.name,
+                    lastName1 : response.lastName1,
+                    phone : response.phone,
+                    image : response.image
+                }
+                res.status(200).json(convertImageToBase64(userContact))
+            }
+        })
+    },
+
     getAll: (req, res) => {
 
         user.find({}, (err, users) => {

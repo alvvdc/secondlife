@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +13,24 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
-import com.iesvirgendelcarmen.secondlife.model.Product
-import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
-import com.iesvirgendelcarmen.secondlife.model.api.Resource
+import com.iesvirgendelcarmen.secondlife.model.*
 
-class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct) :Fragment() {
+class DetailProductFragment :Fragment() {
+
+    private lateinit var product :Product
+    private lateinit var submitDetailProduct :SubmitDetailProduct
+    private lateinit var contactUserButton :ContactUserButton
+
+    private val productViewModel :ProductViewModel by lazy {
+        ViewModelProviders.of(this).get(ProductViewModel::class.java)
+    }
+
+    private val userViewModel :UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
+    }
 
     private lateinit var publisherImage :ImageView
     private lateinit var productImage :ImageView
@@ -30,6 +40,20 @@ class DetailProductFragment(val product: Product, private val productViewModel :
     private lateinit var productPrice :TextView
     private lateinit var productVisits :TextView
     private lateinit var contactButton :Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (arguments != null) {
+            product = arguments?.getParcelable("PRODUCT") ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS, false)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        submitDetailProduct = context as SubmitDetailProduct
+        contactUserButton = context as ContactUserButton
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,11 +98,7 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         if (userId == product.publisher)
         {
             contactButton.text = "Editar"
-            contactButton.setOnClickListener { submitDetailProduct.onClick(product) }
-        }
-        else
-        {
-            // TODO: Fragmento para ver el perfil del autor del anuncio
+            contactButton.setOnClickListener { submitDetailProduct.onClickedEditProductButton(product) }
         }
     }
 
@@ -100,6 +120,25 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         contactButton = view.findViewById(R.id.contactButton)
     }
 
+    private fun setUserContactInfo(user :UserContact) {
+
+        publisherName.text = "${user.name} ${user.lastName1}"
+
+        if (user.image.isNotEmpty()) {
+            val decoded = Base64.decode(user.image, Base64.NO_WRAP)
+            val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+
+            Glide
+                .with(this)
+                .load(bitmap)
+                .into(publisherImage)
+        }
+
+        contactButton.setOnClickListener {
+            contactUserButton.onClickContactUserButton(user.phone)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -108,6 +147,12 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         })
         
         productViewModel.visitProduct(product._id)
+
+        userViewModel.userContactLiveData.observe(viewLifecycleOwner, Observer {
+            setUserContactInfo(it.data)
+        })
+
+        userViewModel.getUserContactInfo(product.publisher, getUserToken())
     }
 
     override fun onDetach() {
@@ -115,7 +160,15 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         super.onDetach()
     }
 
+    private fun getUserToken() :String {
+        return (activity as MainActivity).getSavedUserToken()
+    }
+
     interface SubmitDetailProduct {
-        fun onClick(product :Product)
+        fun onClickedEditProductButton(product :Product)
+    }
+
+    interface ContactUserButton {
+        fun onClickContactUserButton(phone :String)
     }
 }
