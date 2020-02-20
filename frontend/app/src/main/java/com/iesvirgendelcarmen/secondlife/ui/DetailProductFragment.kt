@@ -28,6 +28,8 @@ import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
 class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct, private val contactUserButton: ContactUserButton) :Fragment() {
 
+    lateinit var userId :String
+
     private val userViewModel :UserViewModel by lazy {
         ViewModelProviders.of(this).get(UserViewModel::class.java)
     }
@@ -40,6 +42,12 @@ class DetailProductFragment(val product: Product, private val productViewModel :
     private lateinit var productPrice :TextView
     private lateinit var productVisits :TextView
     private lateinit var contactButton :Button
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val mainActivity = activity as MainActivity
+        userId = mainActivity.getSavedUserId()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,8 +87,6 @@ class DetailProductFragment(val product: Product, private val productViewModel :
             }
         }
 
-        val mainActivity = activity as MainActivity
-        val userId = mainActivity.getSavedUserId()
         if (userId == product.publisher)
         {
             contactButton.text = "Editar"
@@ -120,8 +126,10 @@ class DetailProductFragment(val product: Product, private val productViewModel :
                 .into(publisherImage)
         }
 
-        contactButton.setOnClickListener {
-            contactUserButton.onClick(user.phone)
+        if (userId != product.publisher) {
+            contactButton.setOnClickListener {
+                contactUserButton.onClick(user.phone)
+            }
         }
     }
 
