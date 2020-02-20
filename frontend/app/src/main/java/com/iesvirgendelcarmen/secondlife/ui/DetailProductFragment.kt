@@ -28,6 +28,8 @@ class DetailProductFragment :Fragment() {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
     }
 
+    lateinit var userId :String
+
     private val userViewModel :UserViewModel by lazy {
         ViewModelProviders.of(this).get(UserViewModel::class.java)
     }
@@ -53,6 +55,9 @@ class DetailProductFragment :Fragment() {
         super.onAttach(context)
         submitDetailProduct = context as SubmitDetailProduct
         contactUserButton = context as ContactUserButton
+
+        val mainActivity = activity as MainActivity
+        userId = mainActivity.getSavedUserId()
     }
 
     override fun onCreateView(
@@ -93,8 +98,6 @@ class DetailProductFragment :Fragment() {
             }
         }
 
-        val mainActivity = activity as MainActivity
-        val userId = mainActivity.getSavedUserId()
         if (userId == product.publisher)
         {
             contactButton.text = "Editar"
@@ -134,8 +137,10 @@ class DetailProductFragment :Fragment() {
                 .into(publisherImage)
         }
 
-        contactButton.setOnClickListener {
-            contactUserButton.onClickContactUserButton(user.phone)
+        if (userId != product.publisher) {
+            contactButton.setOnClickListener {
+                contactUserButton.onClickContactUserButton(user.phone)
+            }
         }
     }
 
