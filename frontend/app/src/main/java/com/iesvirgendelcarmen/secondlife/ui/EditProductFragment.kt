@@ -23,7 +23,9 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 
-class EditProductFragment(val product :Product) : Fragment(), View.OnLongClickListener {
+class EditProductFragment : Fragment(), View.OnLongClickListener {
+
+    lateinit var product :Product
 
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -46,6 +48,14 @@ class EditProductFragment(val product :Product) : Fragment(), View.OnLongClickLi
     private var userId = ""
 
     data class FormProduct (val title :String, val description :String, val price :String, val category :String)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (arguments != null) {
+            product = arguments?.getParcelable("PRODUCT") ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS, false)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

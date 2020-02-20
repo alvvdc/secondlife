@@ -1,13 +1,10 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,17 +13,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
-import com.iesvirgendelcarmen.secondlife.model.Product
-import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
-import com.iesvirgendelcarmen.secondlife.model.UserContact
-import com.iesvirgendelcarmen.secondlife.model.UserViewModel
-import com.iesvirgendelcarmen.secondlife.model.api.Resource
+import com.iesvirgendelcarmen.secondlife.model.*
 
-class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct, private val contactUserButton: ContactUserButton) :Fragment() {
+class DetailProductFragment :Fragment() {
+
+    private lateinit var product :Product
+    private lateinit var submitDetailProduct :SubmitDetailProduct
+    private lateinit var contactUserButton :ContactUserButton
+
+    private val productViewModel :ProductViewModel by lazy {
+        ViewModelProviders.of(this).get(ProductViewModel::class.java)
+    }
 
     private val userViewModel :UserViewModel by lazy {
         ViewModelProviders.of(this).get(UserViewModel::class.java)
@@ -40,6 +40,20 @@ class DetailProductFragment(val product: Product, private val productViewModel :
     private lateinit var productPrice :TextView
     private lateinit var productVisits :TextView
     private lateinit var contactButton :Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (arguments != null) {
+            product = arguments?.getParcelable("PRODUCT") ?: Product("", "", "", "", 0f, mutableListOf(), Category.OTROS, false)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        submitDetailProduct = context as SubmitDetailProduct
+        contactUserButton = context as ContactUserButton
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,7 +98,7 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         if (userId == product.publisher)
         {
             contactButton.text = "Editar"
-            contactButton.setOnClickListener { submitDetailProduct.onClick(product) }
+            contactButton.setOnClickListener { submitDetailProduct.onClickedEditProductButton(product) }
         }
     }
 
@@ -121,7 +135,7 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         }
 
         contactButton.setOnClickListener {
-            contactUserButton.onClick(user.phone)
+            contactUserButton.onClickContactUserButton(user.phone)
         }
     }
 
@@ -151,10 +165,10 @@ class DetailProductFragment(val product: Product, private val productViewModel :
     }
 
     interface SubmitDetailProduct {
-        fun onClick(product :Product)
+        fun onClickedEditProductButton(product :Product)
     }
 
     interface ContactUserButton {
-        fun onClick(phone :String)
+        fun onClickContactUserButton(phone :String)
     }
 }

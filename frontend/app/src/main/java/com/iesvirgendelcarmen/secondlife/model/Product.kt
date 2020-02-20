@@ -1,5 +1,9 @@
 package com.iesvirgendelcarmen.secondlife.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Product (
     var _id: String,
     var publisher: String,
@@ -8,4 +12,4 @@ data class Product (
     var price :Float,
     val images :MutableList<String>,
     val category: Category,
-    val isSold :Boolean = false)
+    val isSold :Boolean = false) :Parcelable

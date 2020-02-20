@@ -1,5 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,7 +23,14 @@ import com.iesvirgendelcarmen.secondlife.model.ProductRecyclerViewAdapter
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class ListProductsFragment(private val productViewModel: ProductViewModel, var toolbar: View, val fapCallback :MainActivity.FragmentManager.FAP, val productViewListener: ProductRecyclerViewAdapter.ProductViewListener) :Fragment() {
+class ListProductsFragment :Fragment() {
+
+    private lateinit var productViewListener: ProductRecyclerViewAdapter.ProductViewListener
+    private lateinit var fapCallback :AddProductFAP
+
+    private val productViewModel :ProductViewModel by lazy {
+        ViewModelProviders.of(this).get(ProductViewModel::class.java)
+    }
 
     var lastProductsListObtained = emptyList<Product>()
     lateinit var addProductFAP :FloatingActionButton
@@ -33,6 +43,12 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
         if (savedInstanceState == null) {
             productViewModel.getUnsoldProducts()
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fapCallback = context as AddProductFAP
+        productViewListener = context as ProductRecyclerViewAdapter.ProductViewListener
     }
 
     override fun onCreateView(
@@ -51,7 +67,6 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }
 
-        onSearchListener()
         onClickedFAP(view)
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh)
@@ -63,24 +78,8 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
     private fun onClickedFAP(view: View) {
         addProductFAP = view.findViewById(R.id.addProductFAP)
         addProductFAP.setOnClickListener {
-            fapCallback.onClick()
+            fapCallback.onClickedFapForAddProduct()
         }
-    }
-
-    private fun onSearchListener() {
-        var busqueda: SearchView = toolbar.findViewById(R.id.busqueda)
-
-        busqueda.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                productRecyclerViewAdapter.filter.filter(newText.toString())
-                return true
-            }
-
-        })
     }
 
     override fun onStart() {
@@ -125,5 +124,15 @@ class ListProductsFragment(private val productViewModel: ProductViewModel, var t
 
         productRecyclerViewAdapter.productsList = lastProductsListObtained
         productRecyclerViewAdapter.notifyDataSetChanged()
+    }
+
+    fun listProductsBySearch(query :String) {
+        if (::productRecyclerViewAdapter.isInitialized) {
+            productRecyclerViewAdapter.filter.filter(query)
+        }
+    }
+
+    interface AddProductFAP {
+        fun onClickedFapForAddProduct()
     }
 }
