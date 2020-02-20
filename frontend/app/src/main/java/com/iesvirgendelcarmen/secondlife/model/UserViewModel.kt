@@ -1,5 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.*
@@ -18,6 +19,7 @@ class UserViewModel : ViewModel() {
     val userLiveData = MutableLiveData<Resource<User>>()
     val deleteLiveData = MutableLiveData<Resource<String>>()
     val tokenLiveData = MutableLiveData<Resource<Token>>()
+    val userContactLiveData = MutableLiveData<Resource<UserContact>>()
 
     val voidUser = User("", "", "", "", "", "", "", "", 1, "")
     val voidToken = Token("", "")
@@ -124,4 +126,16 @@ class UserViewModel : ViewModel() {
         })
     }
 
+    fun getUserContactInfo(id :String, token :String) {
+        userRepository.getUserContactInfo(id, token, object : UserRepositoryCallback.UserContactCallback {
+            override fun onResponse(user: UserContact) {
+                userContactLiveData.value = Resource.success(user)
+            }
+
+            override fun onError(message: String) {
+                userContactLiveData.value = Resource.error(message, UserContact("", "", "", ""))
+            }
+
+        })
+    }
 }

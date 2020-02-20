@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserContact
 import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import retrofit2.Call
 import retrofit2.Callback
@@ -126,6 +127,19 @@ object UserRepositoryRetrofit: UserRepositoryDataSource {
         })
     }
 
+    override fun getUserContactInfo(id: String, token: String, callback: UserRepositoryCallback.UserContactCallback) {
 
+        val call = api.getUserContact(id, token)
+        call.enqueue(object : Callback<UserContact> {
+            override fun onFailure(call: Call<UserContact>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<UserContact>, response: Response<UserContact>) {
+                val userContact = response.body() ?: UserContact("", "", "", "")
+                callback.onResponse(userContact)
+            }
+        })
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
@@ -95,9 +97,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onClick(product: Product) {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, DetailProductFragment(product, productViewModel, onSubmitDetailProduct()))
+                    .replace(R.id.container, DetailProductFragment(product, productViewModel, onSubmitDetailProduct(), onContactUserButton()))
                     .addToBackStack(null)
                     .commit()
+            }
+        }
+    }
+
+    private fun onContactUserButton() :DetailProductFragment.ContactUserButton {
+        return object : DetailProductFragment.ContactUserButton {
+            override fun onClick(phone: String) {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone"))
+                startActivity(intent)
             }
         }
     }

@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.Token
 import com.iesvirgendelcarmen.secondlife.model.User
+import com.iesvirgendelcarmen.secondlife.model.UserContact
 import com.iesvirgendelcarmen.secondlife.model.UserWithoutId
 import com.iesvirgendelcarmen.secondlife.model.api.VolleySingleton
 import org.json.JSONObject
@@ -142,8 +143,29 @@ object UserRepositoryVolley: UserRepositoryDataSource {
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
 
+    override fun getUserContactInfo(id: String, token: String, callback: UserRepositoryCallback.UserContactCallback) {
+        VolleySingleton.getInstance().requestQueue
 
+        val GET_USER_CONTACT = "${APIConfig.BASE_URL}/${APIConfig.USER_ROUTE}/$id/contact"
 
+        val stringRequest = object : StringRequest(
+            Method.GET,
+            GET_USER_CONTACT,
 
+            Listener {
+                val userContact = Gson().fromJson<UserContact>(it.toString(), UserContact::class.java)
+                callback.onResponse(userContact)
+            },
 
+            Response.ErrorListener {
+                callback.onError(it.message.toString())
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return mutableMapOf("x-access-token" to token)
+            }
+        }
+
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
+    }
 }

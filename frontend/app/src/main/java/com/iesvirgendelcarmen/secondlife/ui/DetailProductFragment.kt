@@ -1,8 +1,10 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -14,13 +16,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.iesvirgendelcarmen.secondlife.R
 import com.iesvirgendelcarmen.secondlife.model.Product
 import com.iesvirgendelcarmen.secondlife.model.ProductViewModel
+import com.iesvirgendelcarmen.secondlife.model.UserContact
+import com.iesvirgendelcarmen.secondlife.model.UserViewModel
 import com.iesvirgendelcarmen.secondlife.model.api.Resource
 
-class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct) :Fragment() {
+class DetailProductFragment(val product: Product, private val productViewModel :ProductViewModel, private val submitDetailProduct: SubmitDetailProduct, private val contactUserButton: ContactUserButton) :Fragment() {
+
+    private val userViewModel :UserViewModel by lazy {
+        ViewModelProviders.of(this).get(UserViewModel::class.java)
+    }
 
     private lateinit var publisherImage :ImageView
     private lateinit var productImage :ImageView
@@ -76,10 +86,6 @@ class DetailProductFragment(val product: Product, private val productViewModel :
             contactButton.text = "Editar"
             contactButton.setOnClickListener { submitDetailProduct.onClick(product) }
         }
-        else
-        {
-            // TODO: Fragmento para ver el perfil del autor del anuncio
-        }
     }
 
     private fun setProductImage(image :Bitmap) {
@@ -100,6 +106,25 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         contactButton = view.findViewById(R.id.contactButton)
     }
 
+    private fun setUserContactInfo(user :UserContact) {
+
+        publisherName.text = "${user.name} ${user.lastName1}"
+
+        if (user.image.isNotEmpty()) {
+            val decoded = Base64.decode(user.image, Base64.NO_WRAP)
+            val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+
+            Glide
+                .with(this)
+                .load(bitmap)
+                .into(publisherImage)
+        }
+
+        contactButton.setOnClickListener {
+            contactUserButton.onClick(user.phone)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -108,6 +133,12 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         })
         
         productViewModel.visitProduct(product._id)
+
+        userViewModel.userContactLiveData.observe(viewLifecycleOwner, Observer {
+            setUserContactInfo(it.data)
+        })
+
+        userViewModel.getUserContactInfo(product.publisher, getUserToken())
     }
 
     override fun onDetach() {
@@ -115,7 +146,15 @@ class DetailProductFragment(val product: Product, private val productViewModel :
         super.onDetach()
     }
 
+    private fun getUserToken() :String {
+        return (activity as MainActivity).getSavedUserToken()
+    }
+
     interface SubmitDetailProduct {
         fun onClick(product :Product)
+    }
+
+    interface ContactUserButton {
+        fun onClick(phone :String)
     }
 }

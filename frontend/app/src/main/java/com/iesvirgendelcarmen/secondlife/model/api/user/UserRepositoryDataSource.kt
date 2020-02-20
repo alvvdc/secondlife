@@ -12,4 +12,5 @@ interface UserRepositoryDataSource {
     fun register(user: UserWithoutId, callback: UserRepositoryCallback.UserCallback)
     fun login(user: User,  callback: UserRepositoryCallback.TokenCallback)
     fun deleteUser(int: String, token: String, callback: UserRepositoryCallback.DeleteCallback)
+    fun getUserContactInfo(id :String, token :String, callback: UserRepositoryCallback.UserContactCallback)
 }
