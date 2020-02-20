@@ -85,16 +85,24 @@ class MainActivity :    AppCompatActivity(),
     }
 
     override fun onClickProductListElement(product: Product) {
-        val bundle = Bundle()
-        bundle.putParcelable("PRODUCT", product)
-        val detailProductFragment = DetailProductFragment()
-        detailProductFragment.arguments = bundle
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, detailProductFragment)
-            .addToBackStack(null)
-            .commit()
+        if (isThereTokenSaved())
+        {
+            val bundle = Bundle()
+            bundle.putParcelable("PRODUCT", product)
+            val detailProductFragment = DetailProductFragment()
+            detailProductFragment.arguments = bundle
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, detailProductFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        else
+        {
+            showLoginFragment()
+        }
     }
 
     override fun onClickedEditProductButton(product: Product) {
