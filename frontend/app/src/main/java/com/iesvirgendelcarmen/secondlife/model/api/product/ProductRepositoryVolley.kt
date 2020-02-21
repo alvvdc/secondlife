@@ -71,7 +71,7 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         VolleySingleton.getInstance().requestQueue
 
 
-        val GET_PRODUCTS_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/$category"
+        val GET_PRODUCTS_URL = "${APIConfig.BASE_URL}/${APIConfig.PRODUCT_ROUTE}/category/$category"
 
         val stringRequest = StringRequest (
             Request.Method.GET,

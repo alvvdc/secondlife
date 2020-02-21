@@ -56,7 +56,17 @@ module.exports = {
             if (err)
                 res.status(404).json({error : err})
             else
-                res.status(200).json(result)
+                res.status(200).json(convertProductImagesToBase64(result))
+        })
+    },
+
+    getAllProducts : (req, res) => {
+        product.find({}, (err, result) => {
+            if (err) {
+                res.status(500).json({error : err})
+            } else {
+                res.status(200).json(convertProductListImagesToBase64(result))
+            }
         })
     },
 
@@ -105,6 +115,20 @@ const convertProductListImagesToBase64 = (productsList) => {
         newProduct.images = productImages
         return newProduct
     })
+}
+
+const convertProductImagesToBase64 = (product) => {    
+    if (product == null)
+        return product
+    
+    const productImages = product.images.map((productImage) => {
+
+        const base64 = images.readImageSync(productImage)
+        return base64
+    })
+    const newProduct = product
+    newProduct.images = productImages
+    return newProduct
 }
 
 const writeImages = (imagesArray, callback) => {

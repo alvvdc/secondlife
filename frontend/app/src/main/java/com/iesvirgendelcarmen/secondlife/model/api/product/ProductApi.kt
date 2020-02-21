@@ -14,7 +14,7 @@ interface ProductApi {
     @GET(APIConfig.PRODUCT_ROUTE)
     fun getUnsoldProducts() :Call<List<Product>>
 
-    @GET("${APIConfig.PRODUCT_ROUTE}/{category}")
+    @GET("${APIConfig.PRODUCT_ROUTE}/category/{category}")
     fun getUnsoldProductsByCategory(@Path("category") category :String) :Call<List<Product>>
 
     @POST(APIConfig.PRODUCT_ROUTE)
