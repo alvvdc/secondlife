@@ -10,7 +10,7 @@ const tokenAuth = (req, res, next) => {
         else {
           token.findOne({ token: req.headers['x-access-token'] }, (err, tokenGiven) => {
     
-            if (err) res.status(500).json({ error: 'Token error' + err })
+            if (err) res.status(500).json({ error: 'Token error ' + err })
             else if (tokenGiven) {
     
               user.findOne({ email: tokenGiven.email }, (err, userGiven) => {
@@ -24,7 +24,7 @@ const tokenAuth = (req, res, next) => {
               })
     
             }
-            else res.status(404).json({ error: 'Token error' + err })
+            else res.status(404).json({ error: 'Token error ' + err })
           })
         }
       })
