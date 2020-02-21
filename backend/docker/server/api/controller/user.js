@@ -63,7 +63,7 @@ module.exports = {
 
     getById: (req, res) => {                   
         user.findOne({_id: req.params.id}, (err, givenUser) => {            
-            if (err) return res.status(500).json({error: 'Incorrect user' + err})
+            if (err) return res.status(500).json({error: 'Incorrect user ' + err})
             if (!givenUser) return res.status(404).json({status: 'No user'}) 
             res.status(200).json(convertImageToBase64(givenUser))
         })
@@ -85,7 +85,7 @@ module.exports = {
 
         user.findOneAndUpdate({_id: req.params.id}, userEdit, (err, givenUser) => {
             if (err) res.status(500).json({error: 'Error updating user'})
-            else res.status(200).json(convertImageToBase64(givenUser))
+            else res.status(200).json(convertImageToBase64(userEdit))
         })
 
     },
