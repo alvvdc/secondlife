@@ -1,6 +1,6 @@
 [
 	{
-		"publisher": "5e4f0cb0ee3872b51ec9515a",
+		"publisher": {"$oid": "5e4f8c4c5c5b3c5558b323af"},
 		"category": "OTROS",
 		"title": "Raspberry Pi B+",
 		"description": "Viene con su caja, ventilador, disipadores y una micro sd",
@@ -9,7 +9,7 @@
 		"isSold": false
 	},
 	{
-		"publisher": 12,
+		"publisher": {"$oid": "5e4f8cad130f0b558925e511"},
 		"category": "MOTOR",
 		"title": "BMW 320d Año 2016",
 		"description": "Diesel, Automático, color Mineral Grey Metallic con 40.000 kilómetros",
@@ -19,7 +19,7 @@
 	},
 		
 	{
-		"publisher": 13,
+		"publisher": {"$oid": "5e4f8cce9b215955a268b247"},
 		"category": "INMOBILIARIA",
 		"title": "Chalet en Urbanización Monte Pinar",
 		"description": "400m², cerca de la costa.",
@@ -28,7 +28,7 @@
 		"isSold": false
 	},
 	{
-		"publisher": 14,
+		"publisher": {"$oid": "5e4f8c4c5c5b3c5558b323af"},
 		"category": "INMOBILIARIA",
 		"title": "Piso en el centro de Sevilla",
 		"description": "Muy luminoso y de estilo moderno, está recien reformado",
@@ -37,7 +37,7 @@
 		"isSold": false
 	},
 	{
-		"publisher": 12,
+		"publisher": {"$oid": "5e4f8cad130f0b558925e511"},
 		"category": "SERVICIOS",
 		"title": "Gestionamos tus redes sociales",
 		"description": "Controlamos tus perfiles públicos empresariales, posicionamiento SEO, analytics y otros servicios",

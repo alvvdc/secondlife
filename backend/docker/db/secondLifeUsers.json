@@ -1,5 +1,6 @@
 [
-    {
+{
+	"_id": {"$oid": "5e4f8c4c5c5b3c5558b323af"},
 	"nickname": "beta", 
 	"name":"Alberto",
 	"lastName1":"Torres",
@@ -11,6 +12,7 @@
 	"image":"alberto.png"
 },
 {
+	"_id": {"$oid": "5e4f8cad130f0b558925e511"},
 	"nickname": "oravla", 
 	"name":"Álvaro",
 	"lastName1":"García",
@@ -21,7 +23,8 @@
 	"type":1, 
 	"image":"alvaro.png"
 },
-    {
+{
+	"_id": {"$oid": "5e4f8cce9b215955a268b247"},
 	"nickname": "admin",
 	"name":"Steve",
 	"lastName1":"Smith",
