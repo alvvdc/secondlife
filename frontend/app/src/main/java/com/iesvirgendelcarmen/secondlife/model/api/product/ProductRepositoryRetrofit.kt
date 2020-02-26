@@ -2,6 +2,7 @@ package com.iesvirgendelcarmen.secondlife.model.api.product
 
 import com.iesvirgendelcarmen.secondlife.config.APIConfig
 import com.iesvirgendelcarmen.secondlife.model.*
+import com.iesvirgendelcarmen.secondlife.model.api.user.UserRepositoryRetrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -130,6 +131,23 @@ object ProductRepositoryRetrofit : ProductRepositoryDataSource {
             override fun onResponse(call: Call<ProductVisits>, response: Response<ProductVisits>) {
                 val responseProductVisits = response.body() ?: ProductVisits("", -1)
                 callback.onResponse(responseProductVisits)
+            }
+
+        })
+    }
+
+    override fun getProductsByUser(id: String, callback: ProductRepositoryCallback.ListProducts) {
+        callback.onLoading()
+
+        val call = api.getProductsByUser(id)
+        call.enqueue(object : Callback<List<Product>> {
+            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
+                callback.onError(t.message.toString())
+            }
+
+            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
+                val responseProducts = response.body().orEmpty();
+                callback.onResponse(responseProducts)
             }
 
         })

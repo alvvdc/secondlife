@@ -191,4 +191,28 @@ object ProductRepositoryVolley :ProductRepositoryDataSource {
         )
         VolleySingleton.getInstance().addToRequestQueue(stringRequest)
     }
+
+    override fun getProductsByUser(id: String, callback: ProductRepositoryCallback.ListProducts) {
+        callback.onLoading()
+
+        VolleySingleton.getInstance().requestQueue
+
+        val GET_PRODUCTS_URL = "${APIConfig.BASE_URL}/${APIConfig.USER_ROUTE}/$id/product"
+
+        val stringRequest = StringRequest (
+            Request.Method.GET,
+            GET_PRODUCTS_URL,
+            Listener { response ->
+
+                val listType = object : TypeToken<List<Product>>() {}.type
+                val products = Gson().fromJson<List<Product>>(response, listType)
+
+                callback.onResponse(products)
+            },
+            Response.ErrorListener { error ->
+                callback.onError(error.message.toString())
+            }
+        )
+        VolleySingleton.getInstance().addToRequestQueue(stringRequest)
+    }
 }
