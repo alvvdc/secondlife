@@ -1,7 +1,6 @@
 const Jwt = require('jsonwebtoken')
 const Token = require('../model/token')
 const User = require('../model/user')
-const Product = require('../model/product')
 
 const tokenAuth = (req, res, next) => {
 
@@ -12,40 +11,41 @@ const tokenAuth = (req, res, next) => {
     const token = req.headers['x-access-token']
     const secretKey = req.app.get('secretKey')
     Jwt.verify(token, secretKey, (err, decoded) => {
+
         if (err)
             res.status(500).json({status : 'error', message : err.message})
-    })
 
-    let responseToken
+
+        checkToken(token, (responseToken) => {
+            checkUser(userid, (responseUser) => {
+                
+                if (responseToken && responseUser && (responseToken.email === responseUser.email))
+                    next()
+                else
+                    res.status(403).json({error : 'Login failed'})
+            })
+        })
+    })   
+}
+
+const checkToken = (token, callback) => {
     Token.findOne({token : token}, (err, document) => {
         if (err)
             res.status(404).json({error : 'Login session error'})
         else {
-            responseToken = document
-            checkAuth(responseToken, responseUser)
+            callback(document)
         }
     })
+}
 
-    let responseUser
+const checkUser = (userid, callback) => {
     User.findOne({_id : userid}, (err, document) => {
         if (err)
             res.status(404).json({error : 'Login session error'})
         else {
-            responseUser = document
-            checkAuth(responseToken, responseUser)
+            callback(document)
         }
     })
-    
-    const checkAuth = (tokenArg, userArg) => {
-
-        if (tokenArg && userArg)
-        {
-            if (tokenArg.email === userArg.email)
-                next()
-            else
-                res.status(403).json({error : 'Login failed'})
-        }
-    }
-}
+}    
 
 module.exports = tokenAuth
