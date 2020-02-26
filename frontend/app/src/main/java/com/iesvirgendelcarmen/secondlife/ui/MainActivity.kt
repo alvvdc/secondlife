@@ -26,13 +26,13 @@ import com.iesvirgendelcarmen.secondlife.model.api.Resource
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 
-
 class MainActivity :    AppCompatActivity(),
                         NavigationView.OnNavigationItemSelectedListener,
                         DetailProductFragment.SubmitDetailProduct,
                         DetailProductFragment.ContactUserButton,
                         ListProductsFragment.AddProductFAP,
-                        ProductRecyclerViewAdapter.ProductViewListener {
+                        ProductRecyclerViewAdapter.ProductViewListener,
+                        MainActions {
 
     private val productViewModel: ProductViewModel by lazy {
         ViewModelProviders.of(this).get(ProductViewModel::class.java)
@@ -63,25 +63,6 @@ class MainActivity :    AppCompatActivity(),
 
     private fun showLoginFragment() {
         supportFragmentManager.beginTransaction().replace(android.R.id.content, LoginFragment()).addToBackStack(null).commit()
-    }
-
-    fun getSavedUserToken() :String {
-        if (sharedPreferences != null)
-            return sharedPreferences.getString("token", "null").toString()
-        return "null"
-    }
-
-    fun getSavedUserId() :String {
-        if (sharedPreferences != null)
-            return sharedPreferences.getString("userID", "null").toString()
-        return "null"
-    }
-
-    fun isThereTokenSaved() = getSavedUserToken() != "null"
-
-    fun showProductsListFragment() {
-        changeToolbar(true, "")
-        supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment,"listProductFragment").commit()
     }
 
     override fun onClickProductListElement(product: Product) {
@@ -143,87 +124,8 @@ class MainActivity :    AppCompatActivity(),
         nav_view.setNavigationItemSelectedListener(this)
     }
 
-    fun changeToolbar(search: Boolean, text: String){
-        var title = toolbar.findViewById<TextView>(R.id.titleHead)
-        var searchBox = toolbar.findViewById<SearchView>(R.id.busqueda)
-
-        searchBox.isVisible = search
-        title.isVisible = !search
-        title.text = text
-
-    }
-
-    fun logout(){
-        sharedPreferences.edit().remove("userID").remove("token").apply()
-        changeHeaderData()
-        showProductsListFragment()
-    }
-
     private val userViewModel: UserViewModel by lazy {
         ViewModelProviders.of(this).get(UserViewModel::class.java)
-    }
-
-    fun changeHeaderData() {
-        var navigationView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-        var editUser = navigationView.findViewById<ImageButton>(R.id.editUser)
-        var nameLastName = navigationView.findViewById<TextView>(R.id.nameLastName)
-        var email = navigationView.findViewById<TextView>(R.id.email)
-        var menu: Menu = findViewById<NavigationView>(R.id.nav_view).menu
-        var profileButton = menu.findItem(R.id.perfil)
-        var loginButton = menu.findItem(R.id.login)
-        var logoutButton = menu.findItem(R.id.logout)
-        var image = navigationView.findViewById<ImageView>(R.id.image)
-        val token = getSavedUserToken()
-        val userID = getSavedUserId()
-
-        if (token != "null") {
-            loginButton.isVisible = false
-            logoutButton.isVisible = true
-            profileButton.isVisible = true
-            editUser.isVisible = true
-
-            userViewModel.getUser(userID, token)
-
-            userViewModel.userLiveData.observe(this, Observer { resource ->
-                when (resource.status) {
-                    Resource.Status.SUCCESS -> {
-                        nameLastName.text = "${resource.data.name} ${resource.data.lastName1} ${resource.data.lastName2}"
-                        email.text = resource.data.email
-                        val decoded = Base64.decode(resource.data.image, Base64.NO_WRAP)
-                        val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
-                        Glide.with(image).load(bitmap).into(image)
-                    }
-                    Resource.Status.ERROR ->
-                        Toast.makeText(applicationContext, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
-                }
-            })
-
-        } else {
-            nameLastName.text = "Invitado"
-            email.text = ""
-            image.setImageResource(R.drawable.logo)
-            loginButton.isVisible = true
-            logoutButton.isVisible = false
-            profileButton.isVisible = false
-            editUser.isVisible = false
-        }
-
-        editUser.setOnClickListener {
-            showProfile()
-            drawerLayout.closeDrawers()
-        }
-    }
-
-    fun showProfile() {
-
-        val fragmentManager = supportFragmentManager
-        val count = fragmentManager.backStackEntryCount
-        for (i in 0 until count) {
-            fragmentManager.popBackStackImmediate()
-        }
-        
-        supportFragmentManager.beginTransaction().replace(R.id.container, ProfileFragment(sharedPreferences)).addToBackStack(null).commit()
-        changeToolbar(false, "Perfil")
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -276,5 +178,116 @@ class MainActivity :    AppCompatActivity(),
         })
     }
 
+    // Main actions:
 
+    override fun showProfile() {
+
+        val fragmentManager = supportFragmentManager
+        val count = fragmentManager.backStackEntryCount
+        for (i in 0 until count) {
+            fragmentManager.popBackStackImmediate()
+        }
+
+        supportFragmentManager.beginTransaction().replace(R.id.container, ProfileFragment(sharedPreferences)).addToBackStack(null).commit()
+        changeToolbar(false, "Perfil")
+    }
+
+    override fun showProductsListFragment() {
+        changeToolbar(true, "")
+        supportFragmentManager.beginTransaction().replace(R.id.container, listProductsFragment,"listProductFragment").commit()
+    }
+
+    override fun changeHeaderData() {
+        var navigationView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
+        var editUser = navigationView.findViewById<ImageButton>(R.id.editUser)
+        var nameLastName = navigationView.findViewById<TextView>(R.id.nameLastName)
+        var email = navigationView.findViewById<TextView>(R.id.email)
+        var menu: Menu = findViewById<NavigationView>(R.id.nav_view).menu
+        var profileButton = menu.findItem(R.id.perfil)
+        var loginButton = menu.findItem(R.id.login)
+        var logoutButton = menu.findItem(R.id.logout)
+        var image = navigationView.findViewById<ImageView>(R.id.image)
+        val token = getSavedUserToken()
+        val userID = getSavedUserId()
+
+        if (token != "null") {
+            loginButton.isVisible = false
+            logoutButton.isVisible = true
+            profileButton.isVisible = true
+            editUser.isVisible = true
+
+            userViewModel.getUser(userID, token)
+
+            userViewModel.userLiveData.observe(this, Observer { resource ->
+                when (resource.status) {
+                    Resource.Status.SUCCESS -> {
+                        nameLastName.text = "${resource.data.name} ${resource.data.lastName1} ${resource.data.lastName2}"
+                        email.text = resource.data.email
+                        val decoded = Base64.decode(resource.data.image, Base64.NO_WRAP)
+                        val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+                        Glide.with(image).load(bitmap).into(image)
+                    }
+                    Resource.Status.ERROR ->
+                        Toast.makeText(applicationContext, "Error al cargar tus datos", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        } else {
+            nameLastName.text = "Invitado"
+            email.text = ""
+            image.setImageResource(R.drawable.logo)
+            loginButton.isVisible = true
+            logoutButton.isVisible = false
+            profileButton.isVisible = false
+            editUser.isVisible = false
+        }
+
+        editUser.setOnClickListener {
+            showProfile()
+            drawerLayout.closeDrawers()
+        }
+    }
+
+    override fun logout(){
+        sharedPreferences.edit().remove("userID").remove("token").apply()
+        changeHeaderData()
+        showProductsListFragment()
+    }
+
+    override fun changeToolbar(search: Boolean, text: String){
+        var title = toolbar.findViewById<TextView>(R.id.titleHead)
+        var searchBox = toolbar.findViewById<SearchView>(R.id.busqueda)
+
+        searchBox.isVisible = search
+        title.isVisible = !search
+        title.text = text
+    }
+
+    override fun getSavedUserToken() :String {
+        if (sharedPreferences != null)
+            return sharedPreferences.getString("token", "null").toString()
+        return "null"
+    }
+
+    override fun getSavedUserId() :String {
+        if (sharedPreferences != null)
+            return sharedPreferences.getString("userID", "null").toString()
+        return "null"
+    }
+
+    override fun isThereTokenSaved(): Boolean {
+      return getSavedUserToken() != "null"
+    }
+
+}
+
+interface MainActions{
+    fun showProfile()
+    fun changeHeaderData()
+    fun logout()
+    fun changeToolbar(search: Boolean, text: String)
+    fun getSavedUserId() :String
+    fun getSavedUserToken() :String
+    fun showProductsListFragment()
+    fun isThereTokenSaved(): Boolean
 }

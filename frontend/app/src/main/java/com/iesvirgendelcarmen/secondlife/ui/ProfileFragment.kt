@@ -1,6 +1,7 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -121,8 +122,15 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
         }
     }
 
+    private lateinit var mainActions: MainActions
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActions = context as MainActions
+    }
+
     override fun onDetach() {
-        (activity as MainActivity).changeToolbar(true, "")
+        mainActions.changeToolbar(true, "")
         super.onDetach()
     }
 
@@ -165,6 +173,8 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
         return scaledBitmap
     }
 
+
+
     private fun delete(userID: String, token: String) {
         AlertDialog.Builder(context!!)
             .setTitle("Borrar cuenta")
@@ -174,16 +184,13 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
             ) { dialog, which ->
 
                 userViewModel.deleteUser(userID, token)
-
                 userViewModel.deleteLiveData.observe(viewLifecycleOwner, Observer { resource ->
 
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
-                            (activity as MainActivity).logout()
-
-                            var activity = (activity as MainActivity)
-                            activity.changeHeaderData()
-                            activity.showProductsListFragment()
+                            mainActions.logout()
+                            mainActions.changeHeaderData()
+                            mainActions.showProductsListFragment()
                         }
                         Resource.Status.ERROR -> {
                             Toast.makeText(context,"Error al borrar tu usuario", Toast.LENGTH_SHORT).show()
@@ -221,8 +228,8 @@ class ProfileFragment(val sharedPreferences: SharedPreferences): Fragment() {
                     when (resource.status) {
                         Resource.Status.SUCCESS -> {
                             Toast.makeText(context,"Usuario actualizado con exito", Toast.LENGTH_SHORT).show()
-                            (activity as MainActivity).changeHeaderData()
-                            (activity as MainActivity).showProfile()
+                            mainActions.changeHeaderData()
+                            mainActions.showProfile()
                         }
                         Resource.Status.ERROR -> {
                             Toast.makeText(context,"Error al actualizar tu usuario", Toast.LENGTH_SHORT).show()

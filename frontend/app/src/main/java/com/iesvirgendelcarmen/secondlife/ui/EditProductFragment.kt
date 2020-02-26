@@ -2,6 +2,7 @@ package com.iesvirgendelcarmen.secondlife.ui
 
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -58,6 +59,13 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
         }
     }
 
+    private lateinit var mainActions: MainActions
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActions = context as MainActivity
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,15 +75,13 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as MainActivity).changeToolbar(false, "Editar producto")
+        mainActions.changeToolbar(false, "Editar producto")
         findViewsById(view)
         loadSpinner(view)
         fillFieldsWithExistingData()
 
-        val mainActivity = activity as MainActivity
-        if (mainActivity != null && mainActivity.isThereTokenSaved()) {
-
-            userId = mainActivity.getSavedUserId()
+        if (mainActions.isThereTokenSaved()) {
+            userId = mainActions.getSavedUserId()
             onSaveProduct()
         }
 
@@ -111,7 +117,7 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
     }
 
     private fun getUserToken() :String {
-        return (activity as MainActivity).getSavedUserToken()
+        return mainActions.getSavedUserToken()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
