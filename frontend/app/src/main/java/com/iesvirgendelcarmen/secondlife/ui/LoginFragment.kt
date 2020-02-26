@@ -1,5 +1,6 @@
 package com.iesvirgendelcarmen.secondlife.ui
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,13 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.login, container, false)
+    }
+
+    private lateinit var mainActions: MainActions
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActions = context as MainActivity
     }
 
     private val userViewModel: UserViewModel by lazy {
@@ -54,7 +62,7 @@ class LoginFragment : Fragment() {
                 Resource.Status.SUCCESS -> {
                     var sharedPreferences = context!!.getSharedPreferences(APIConfig.CONFIG_FILE, 0)
                     sharedPreferences.edit().putString("token", resource.data.token).putString("userID", resource.data.userId).apply()
-                    (activity as MainActivity).changeHeaderData()
+                    mainActions.changeHeaderData()
                     exit()
                 }
                 Resource.Status.ERROR -> {

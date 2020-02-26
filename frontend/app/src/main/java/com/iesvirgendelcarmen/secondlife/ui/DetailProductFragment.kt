@@ -51,13 +51,14 @@ class DetailProductFragment :Fragment() {
         }
     }
 
+    private lateinit var mainActions: MainActions
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         submitDetailProduct = context as SubmitDetailProduct
         contactUserButton = context as ContactUserButton
-
-        val mainActivity = activity as MainActivity
-        userId = mainActivity.getSavedUserId()
+        mainActions = context as MainActivity
+        userId = mainActions.getSavedUserId()
     }
 
     override fun onCreateView(
@@ -69,7 +70,7 @@ class DetailProductFragment :Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as MainActivity).changeToolbar(false, product.title)
+        mainActions.changeToolbar(false, product.title)
         findViewsById(view)
 
         productTitle.text = product.title
@@ -161,12 +162,12 @@ class DetailProductFragment :Fragment() {
     }
 
     override fun onDetach() {
-        (activity as MainActivity).changeToolbar(true, "")
+        mainActions.changeToolbar(true, "")
         super.onDetach()
     }
 
     private fun getUserToken() :String {
-        return (activity as MainActivity).getSavedUserToken()
+        return mainActions.getSavedUserToken()
     }
 
     interface SubmitDetailProduct {

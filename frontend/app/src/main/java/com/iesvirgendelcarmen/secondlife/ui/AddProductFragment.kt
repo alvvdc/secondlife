@@ -2,6 +2,7 @@ package com.iesvirgendelcarmen.secondlife.ui
 
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -56,7 +57,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as MainActivity).changeToolbar(false, "Nuevo producto")
+        mainActions.changeToolbar(false, "Nuevo producto")
         findViewsById(view)
         loadSpinner(view)
 
@@ -98,8 +99,15 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
         }
     }
 
+    private lateinit var mainActions: MainActions
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActions = context as MainActivity
+    }
+
     private fun getUserToken() :String {
-        return (activity as MainActivity).getSavedUserToken()
+        return mainActions.getSavedUserToken()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -213,7 +221,7 @@ class AddProductFragment : Fragment(), View.OnLongClickListener {
     }
 
     override fun onDetach() {
-        (activity as MainActivity).changeToolbar(true, "")
+        mainActions.changeToolbar(true, "")
         super.onDetach()
     }
 
