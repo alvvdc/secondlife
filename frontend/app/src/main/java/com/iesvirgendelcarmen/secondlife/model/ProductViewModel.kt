@@ -14,6 +14,7 @@ class ProductViewModel : ViewModel() {
     val productListLiveData = MutableLiveData<Resource<List<Product>>>()
     val productLiveData = MutableLiveData<Resource<Product>>()
     val productVisitsLiveData = MutableLiveData<Resource<ProductVisits>>()
+    val productListByUserLiveData = MutableLiveData<Resource<List<Product>>>()
 
     private val productRepository : ProductRepositoryDataSource = ProductRepositoryVolley
 
@@ -87,6 +88,23 @@ class ProductViewModel : ViewModel() {
                 productVisitsLiveData.value = Resource.error(message, ProductVisits("", -1))
             }
 
+        })
+    }
+
+    fun getProductsByUser(userId :String) {
+
+        productRepository.getProductsByUser(userId, object : ProductRepositoryCallback.ListProducts {
+            override fun onResponse(products: List<Product>) {
+                productListByUserLiveData.value = Resource.success(products)
+            }
+
+            override fun onError(message: String) {
+                productListByUserLiveData.value = Resource.error(message, emptyList())
+            }
+
+            override fun onLoading() {
+                productListByUserLiveData.value = Resource.loading(emptyList())
+            }
         })
     }
 }

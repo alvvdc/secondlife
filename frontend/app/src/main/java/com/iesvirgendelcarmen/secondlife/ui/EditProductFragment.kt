@@ -37,6 +37,7 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
     private lateinit var categorySpinner :Spinner
     private lateinit var save :Button
     private lateinit var loadImage :Button
+    private lateinit var isSold :Switch
     private lateinit var buttonsLayout :LinearLayout
 
     private val NOT_SELECTED_CATEGORY = "Categoría"
@@ -61,7 +62,7 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.add_product_layout, container, false)
+    ): View = inflater.inflate(R.layout.edit_product_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,7 +103,7 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
             val loadedImagesList = loadedImages.values.toMutableList()
 
             if (areFieldsFilled(formProduct)) {
-                productViewModel.updateProduct(Product(product._id, userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category)), getUserToken())
+                productViewModel.updateProduct(Product(product._id, userId, formProduct.title, formProduct.description, formProduct.price.toFloat(), loadedImagesList, Category.parse(formProduct.category), isSold.isChecked), getUserToken())
             } else {
                 Toast.makeText(context, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show()
             }
@@ -207,6 +208,7 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
         priceEditText = view.findViewById(R.id.price)
         save = view.findViewById(R.id.save)
         loadImage = view.findViewById(R.id.loadImages)
+        isSold = view.findViewById(R.id.isSold)
         buttonsLayout = view.findViewById(R.id.buttonsLayout)
     }
 
@@ -230,6 +232,8 @@ class EditProductFragment : Fragment(), View.OnLongClickListener {
             loadedImages[newButton] = image
             imageCount++
         }
+
+        isSold.isChecked = product.isSold
     }
 
     private fun loadSpinner(view: View) {

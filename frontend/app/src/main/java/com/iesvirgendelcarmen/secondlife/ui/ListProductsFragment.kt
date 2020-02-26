@@ -33,6 +33,8 @@ class ListProductsFragment :Fragment() {
     }
 
     var lastProductsListObtained = emptyList<Product>()
+    var lastProductsListByUserObtained = emptyList<Product>()
+
     lateinit var addProductFAP :FloatingActionButton
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var productRecyclerViewAdapter :ProductRecyclerViewAdapter
@@ -103,6 +105,25 @@ class ListProductsFragment :Fragment() {
                 }
             }
         })
+
+        productViewModel.productListByUserLiveData.observe(viewLifecycleOwner, Observer { resource ->
+
+            when (resource.status) {
+                Resource.Status.SUCCESS -> {
+                    lastProductsListByUserObtained = resource.data
+                    swipeRefreshLayout.isRefreshing = false
+
+                    productRecyclerViewAdapter.productsList = lastProductsListByUserObtained
+                    productRecyclerViewAdapter.notifyDataSetChanged()
+                }
+                Resource.Status.ERROR -> {
+                    swipeRefreshLayout.isRefreshing = false
+                }
+                Resource.Status.LOADING -> {
+                    swipeRefreshLayout.isRefreshing = true
+                }
+            }
+        })
     }
 
     fun listProductsByCategory(category: Category) {
@@ -114,8 +135,8 @@ class ListProductsFragment :Fragment() {
     }
 
     fun listProductsByUserId(userId :String) {
-        val filteredProductList = lastProductsListObtained.filter { product -> product.publisher == userId }
-        productRecyclerViewAdapter.productsList = filteredProductList
+        productViewModel.getProductsByUser(userId)
+        productRecyclerViewAdapter.productsList = lastProductsListByUserObtained
         productRecyclerViewAdapter.notifyDataSetChanged()
     }
 

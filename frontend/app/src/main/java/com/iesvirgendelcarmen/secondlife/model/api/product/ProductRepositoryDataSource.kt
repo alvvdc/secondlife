@@ -10,4 +10,5 @@ interface ProductRepositoryDataSource {
     fun updateProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct)
     fun deleteProduct(product: Product, token :String, callback: ProductRepositoryCallback.OneProduct)
     fun visitProduct(productId :String, callback: ProductRepositoryCallback.VisitProduct)
+    fun getProductsByUser(id :String, callback: ProductRepositoryCallback.ListProducts)
 }

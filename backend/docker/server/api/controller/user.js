@@ -141,7 +141,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json(err)
             } else {
-                res.status(200).json(doc)
+                res.status(200).json(convertProductListImagesToBase64(doc))
             }
         })
     }
@@ -152,4 +152,17 @@ const convertImageToBase64 = (user) => {
     const newUser = user
     newUser.image = images.readUserImageSync(user.image)
     return newUser
+}
+
+const convertProductListImagesToBase64 = (productsList) => {
+    return productsList.map((product) => {                    
+        const productImages = product.images.map((productImage) => {
+
+            const base64 = images.readImageSync(productImage)
+            return base64
+        })
+        const newProduct = product
+        newProduct.images = productImages
+        return newProduct
+    })
 }

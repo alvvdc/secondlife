@@ -28,4 +28,7 @@ interface ProductApi {
 
     @GET("${APIConfig.PRODUCT_ROUTE}/{id}/visit")
     fun visitProduct(@Path("id") productId :String) :Call<ProductVisits>
+
+    @GET("${APIConfig.USER_ROUTE}/{id}/product")
+    fun getProductsByUser(@Path("id") id :String) :Call<List<Product>>
 }
